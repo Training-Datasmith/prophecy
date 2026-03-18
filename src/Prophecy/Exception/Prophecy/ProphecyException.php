@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -13,4 +15,6 @@ namespace Prophecy\Exception\Prophecy;
 
 use Prophecy\Exception\Exception;
 
-interface ProphecyException extends Exception {}
+interface ProphecyException extends Exception
+{
+}

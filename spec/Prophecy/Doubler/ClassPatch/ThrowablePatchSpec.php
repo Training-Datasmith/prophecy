@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Doubler\ClassPatch;
 
 use PhpSpec\ObjectBehavior;
@@ -7,44 +9,44 @@ use Prophecy\Doubler\Generator\Node\ClassNode;
 
 class ThrowablePatchSpec extends ObjectBehavior
 {
-    function it_is_a_patch()
+    public function it_is_a_patch()
     {
         $this->shouldBeAnInstanceOf('Prophecy\Doubler\ClassPatch\ClassPatchInterface');
     }
 
-    function it_does_not_support_class_that_does_not_implement_throwable(ClassNode $node)
+    public function it_does_not_support_class_that_does_not_implement_throwable(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array());
+        $node->getInterfaces()->willReturn([]);
         $node->getParentClass()->willReturn('stdClass');
 
         $this->supports($node)->shouldReturn(false);
     }
 
-    function it_supports_class_that_extends_not_throwable_class(ClassNode $node)
+    public function it_supports_class_that_extends_not_throwable_class(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array('Throwable'));
+        $node->getInterfaces()->willReturn(['Throwable']);
         $node->getParentClass()->willReturn('stdClass');
 
         $this->supports($node)->shouldReturn(true);
     }
 
-    function it_does_not_support_class_that_already_extends_a_throwable_class(ClassNode $node)
+    public function it_does_not_support_class_that_already_extends_a_throwable_class(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array('Throwable'));
+        $node->getInterfaces()->willReturn(['Throwable']);
         $node->getParentClass()->willReturn('InvalidArgumentException');
 
         $this->supports($node)->shouldReturn(false);
     }
 
-    function it_supports_class_implementing_interface_that_extends_throwable(ClassNode $node)
+    public function it_supports_class_implementing_interface_that_extends_throwable(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array('Fixtures\Prophecy\ThrowableInterface'));
+        $node->getInterfaces()->willReturn(['Fixtures\Prophecy\ThrowableInterface']);
         $node->getParentClass()->willReturn('stdClass');
 
         $this->supports($node)->shouldReturn(true);
     }
 
-    function it_sets_the_parent_class_to_exception(ClassNode $node)
+    public function it_sets_the_parent_class_to_exception(ClassNode $node)
     {
         $node->getParentClass()->willReturn('stdClass');
 
@@ -62,7 +64,7 @@ class ThrowablePatchSpec extends ObjectBehavior
         $this->apply($node);
     }
 
-    function it_throws_error_when_trying_to_double_concrete_class_and_throwable_interface(ClassNode $node)
+    public function it_throws_error_when_trying_to_double_concrete_class_and_throwable_interface(ClassNode $node)
     {
         $node->getParentClass()->willReturn('ArrayObject');
 

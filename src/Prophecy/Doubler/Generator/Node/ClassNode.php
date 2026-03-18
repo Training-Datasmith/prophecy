@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -118,7 +120,8 @@ class ClassNode
 
         if (!\in_array($visibility, ['public', 'private', 'protected'], true)) {
             throw new InvalidArgumentException(sprintf(
-                '`%s` property visibility is not supported.', $visibility
+                '`%s` property visibility is not supported.',
+                $visibility
             ));
         }
 
@@ -141,7 +144,8 @@ class ClassNode
     {
         if (!$this->isExtendable($method->getName())) {
             $message = sprintf(
-                'Method `%s` is not extendable, so can not be added.', $method->getName()
+                'Method `%s` is not extendable, so can not be added.',
+                $method->getName()
             );
             throw new MethodNotExtendableException($message, $this->getParentClass(), $method->getName());
         }

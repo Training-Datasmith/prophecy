@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Prophecy\Argument\Token;
 
 use PHPUnit\Framework\Attributes\Test;
@@ -35,7 +37,8 @@ class ExactValueTokenTest extends TestCase
     #[Test]
     public function scores_10_for_matching_callables(): void
     {
-        $callable = function () {};
+        $callable = function () {
+        };
 
         $exactValueToken = new ExactValueToken($callable);
         self::assertEquals(10, $exactValueToken->scoreArgument($callable));
@@ -47,7 +50,7 @@ class ExactValueTokenTest extends TestCase
         $child1 = new ChildClass('A', new ParentClass());
 
         $exactValueToken = new ExactValueToken($child1);
-        self::assertEquals(false, $exactValueToken->scoreArgument("A"));
+        self::assertEquals(false, $exactValueToken->scoreArgument('A'));
     }
 
     #[Test]
@@ -78,10 +81,9 @@ class ExactValueTokenTest extends TestCase
     }
 }
 
-
 class ParentClass
 {
-    public $children = array();
+    public $children = [];
 
     public function addChild($child)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Doubler\Generator\Node\Type;
 
 use Prophecy\Exception\Doubler\DoubleException;
@@ -42,7 +44,7 @@ final readonly class UnionType implements TypeInterface
                 throw new DoubleException('Union types cannot contain other unions.');
             }
             if ($type instanceof IntersectionType) {
-                $typeStrings[] = implode('&', array_map(fn(SimpleType $type): string => (string) $type, $type->getTypes()));
+                $typeStrings[] = implode('&', array_map(fn (SimpleType $type): string => (string) $type, $type->getTypes()));
                 continue; // Valid type, nothing to be checked
             }
             if (!$type instanceof SimpleType) {

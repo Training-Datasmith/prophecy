@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -83,7 +85,8 @@ class DisableConstructorPatch implements ClassPatchInterface
             )));
         }
 
-        $constructor->setCode(<<<PHP
+        $constructor->setCode(
+            <<<PHP
 if (0 < func_num_args()) {
     call_user_func_array(array(parent::class, '__construct'), func_get_args());
 }

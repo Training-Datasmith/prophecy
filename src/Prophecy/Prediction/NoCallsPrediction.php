@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,10 +13,10 @@
 
 namespace Prophecy\Prediction;
 
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\MethodProphecy;
-use Prophecy\Util\StringUtil;
 use Prophecy\Exception\Prediction\UnexpectedCallsException;
+use Prophecy\Prophecy\MethodProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Util\StringUtil;
 
 /**
  * Tests that there were no calls made.

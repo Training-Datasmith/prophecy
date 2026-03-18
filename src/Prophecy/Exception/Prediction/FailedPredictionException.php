@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -19,4 +21,6 @@ use RuntimeException;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class FailedPredictionException extends RuntimeException implements PredictionException {}
+class FailedPredictionException extends RuntimeException implements PredictionException
+{
+}

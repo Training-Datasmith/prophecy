@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -12,9 +14,9 @@
 namespace Prophecy\Argument\Token;
 
 use Prophecy\Comparator\FactoryProvider;
+use Prophecy\Util\StringUtil;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
-use Prophecy\Util\StringUtil;
 
 /**
  * Object state-checker token.
@@ -55,7 +57,8 @@ class ObjectStateToken implements TokenInterface
             $actual = call_user_func($methodCallable);
 
             $comparator = $this->comparatorFactory->getComparatorFor(
-                $this->value, $actual
+                $this->value,
+                $actual
             );
 
             try {
@@ -86,7 +89,8 @@ class ObjectStateToken implements TokenInterface
      */
     public function __toString(): string
     {
-        return sprintf('state(%s(), %s)',
+        return sprintf(
+            'state(%s(), %s)',
             $this->name,
             $this->util->stringify($this->value)
         );

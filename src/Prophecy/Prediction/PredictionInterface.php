@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -13,8 +15,8 @@ namespace Prophecy\Prediction;
 
 use Prophecy\Call\Call;
 use Prophecy\Exception\Prediction\PredictionException;
-use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophecy\MethodProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Prediction interface.

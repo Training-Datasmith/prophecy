@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Argument\Token;
 
 use PhpSpec\ObjectBehavior;
@@ -7,48 +9,48 @@ use Prophecy\Argument\Token\TokenInterface;
 
 class TypeTokenSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('integer');
     }
 
-    function it_implements_TokenInterface()
+    public function it_implements_TokenInterface()
     {
         $this->shouldBeAnInstanceOf('Prophecy\Argument\Token\TokenInterface');
     }
 
-    function it_is_not_last()
+    public function it_is_not_last()
     {
         $this->shouldNotBeLast();
     }
 
-    function it_scores_5_if_argument_matches_simple_type()
+    public function it_scores_5_if_argument_matches_simple_type()
     {
         $this->beConstructedWith('integer');
 
         $this->scoreArgument(42)->shouldReturn(5);
     }
 
-    function it_does_not_scores_if_argument_does_not_match_simple_type()
+    public function it_does_not_scores_if_argument_does_not_match_simple_type()
     {
         $this->beConstructedWith('integer');
 
         $this->scoreArgument(42.0)->shouldReturn(false);
     }
 
-    function it_scores_5_if_argument_is_an_instance_of_specified_class(\ReflectionObject $object)
+    public function it_scores_5_if_argument_is_an_instance_of_specified_class(\ReflectionObject $object)
     {
         $this->beConstructedWith('ReflectionClass');
 
         $this->scoreArgument($object)->shouldReturn(5);
     }
 
-    function it_has_simple_string_representation()
+    public function it_has_simple_string_representation()
     {
         $this->__toString()->shouldReturn('type(integer)');
     }
 
-    function it_scores_5_if_argument_is_an_instance_of_specified_interface(TokenInterface $interface)
+    public function it_scores_5_if_argument_is_an_instance_of_specified_interface(TokenInterface $interface)
     {
         $this->beConstructedWith('Prophecy\Argument\Token\TokenInterface');
 

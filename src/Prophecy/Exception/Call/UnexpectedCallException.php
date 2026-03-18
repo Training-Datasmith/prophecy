@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -22,9 +24,12 @@ class UnexpectedCallException extends ObjectProphecyException
      * @param string                 $methodName
      * @param array<mixed>           $arguments
      */
-    public function __construct($message, ObjectProphecy $objectProphecy,
-        private $methodName, private readonly array $arguments)
-    {
+    public function __construct(
+        $message,
+        ObjectProphecy $objectProphecy,
+        private $methodName,
+        private readonly array $arguments
+    ) {
         parent::__construct($message, $objectProphecy);
     }
 

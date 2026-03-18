@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Util;
 
 use SebastianBergmann\RecursionContext\Context;

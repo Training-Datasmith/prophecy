@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fixtures\Prophecy;
 
 class SpecialMethods
@@ -8,28 +10,28 @@ class SpecialMethods
     {
     }
 
-    function __destruct()
+    public function __destruct()
     {
     }
 
-    function __call($name, $arguments)
+    public function __call($name, $arguments)
     {
     }
 
-    function __sleep()
+    public function __sleep()
     {
     }
 
-    function __wakeup()
+    public function __wakeup()
     {
     }
 
-    function __toString()
+    public function __toString()
     {
         return '';
     }
 
-    function __invoke()
+    public function __invoke()
     {
     }
 

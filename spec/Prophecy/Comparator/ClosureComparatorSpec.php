@@ -1,37 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Comparator;
 
 use PhpSpec\ObjectBehavior;
 
 class ClosureComparatorSpec extends ObjectBehavior
 {
-    function it_is_comparator()
+    public function it_is_comparator()
     {
         $this->shouldHaveType('SebastianBergmann\Comparator\Comparator');
     }
 
-    function it_accepts_only_closures()
+    public function it_accepts_only_closures()
     {
         $this->accepts(123, 321)->shouldReturn(false);
         $this->accepts('string', 'string')->shouldReturn(false);
         $this->accepts(false, true)->shouldReturn(false);
         $this->accepts(true, false)->shouldReturn(false);
-        $this->accepts((object) array(), (object) array())->shouldReturn(false);
-        $this->accepts(function () {}, (object) array())->shouldReturn(false);
-        $this->accepts(function () {}, (object) array())->shouldReturn(false);
+        $this->accepts((object) [], (object) [])->shouldReturn(false);
+        $this->accepts(function () {
+        }, (object) [])->shouldReturn(false);
+        $this->accepts(function () {
+        }, (object) [])->shouldReturn(false);
 
-        $this->accepts(function () {}, function () {})->shouldReturn(true);
+        $this->accepts(function () {
+        }, function () {
+        })->shouldReturn(true);
     }
 
-    function it_asserts_that_different_closures_are_different()
+    public function it_asserts_that_different_closures_are_different()
     {
-        $this->shouldThrow()->duringAssertEquals(function () {}, function () {});
+        $this->shouldThrow()->duringAssertEquals(function () {
+        }, function () {
+        });
     }
 
-    function it_asserts_that_closures_are_equal_if_its_the_same_closure()
+    public function it_asserts_that_closures_are_equal_if_its_the_same_closure()
     {
-        $closure = function () {};
+        $closure = function () {
+        };
 
         $this->shouldNotThrow()->duringAssertEquals($closure, $closure);
     }

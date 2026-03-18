@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Doubler\Generator\Node\Type;
 
 use PhpSpec\ObjectBehavior;
@@ -11,7 +13,7 @@ use Prophecy\Exception\Doubler\DoubleException;
 
 class IntersectionTypeSpec extends ObjectBehavior
 {
-    function let(): void
+    public function let(): void
     {
         $this->beConstructedWith([
             new ObjectType('Foo'),
@@ -19,12 +21,12 @@ class IntersectionTypeSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_implement_type_union(): void
+    public function it_should_implement_type_union(): void
     {
         $this->shouldImplement(TypeInterface::class);
     }
 
-    function it_should_throw_double_exception_for_builtin_types()
+    public function it_should_throw_double_exception_for_builtin_types()
     {
         $this->beConstructedWith([
             new BuiltinType('string'),
@@ -33,7 +35,7 @@ class IntersectionTypeSpec extends ObjectBehavior
         $this->shouldThrow(DoubleException::class)->duringInstantiation();
     }
 
-    function it_should_throw_double_exception_if_less_than_2_types_provided()
+    public function it_should_throw_double_exception_if_less_than_2_types_provided()
     {
         $this->beConstructedWith([
             new ObjectType('Bar'),
@@ -41,7 +43,7 @@ class IntersectionTypeSpec extends ObjectBehavior
         $this->shouldThrow(DoubleException::class)->duringInstantiation();
     }
 
-    function it_should_throw_double_exception_if_union_type_given(): void
+    public function it_should_throw_double_exception_if_union_type_given(): void
     {
         $this->beConstructedWith([
             new ObjectType('Bar'),
@@ -50,7 +52,7 @@ class IntersectionTypeSpec extends ObjectBehavior
         $this->shouldThrow(DoubleException::class)->duringInstantiation();
     }
 
-    function it_is_stringable(): void
+    public function it_is_stringable(): void
     {
         $bar = new ObjectType('Bar');
         $foo = new ObjectType('Foo');

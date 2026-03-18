@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -12,8 +14,8 @@
 namespace Prophecy\Exception\Prediction;
 
 use Prophecy\Call\Call;
-use Prophecy\Prophecy\MethodProphecy;
 use Prophecy\Exception\Prophecy\MethodProphecyException;
+use Prophecy\Prophecy\MethodProphecy;
 
 class UnexpectedCallsException extends MethodProphecyException implements PredictionException
 {

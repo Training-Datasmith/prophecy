@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -16,11 +18,11 @@ use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
 use Prophecy\Doubler\Generator\Node\Type\BuiltinType;
 use Prophecy\Doubler\Generator\Node\Type\IntersectionType;
 use Prophecy\Doubler\Generator\Node\Type\ObjectType;
-use Prophecy\Doubler\Generator\Node\Type\TypeInterface;
 use Prophecy\Doubler\Generator\Node\Type\SimpleType;
+use Prophecy\Doubler\Generator\Node\Type\TypeInterface;
 use Prophecy\Doubler\Generator\Node\Type\UnionType;
-use Prophecy\Exception\InvalidArgumentException;
 use Prophecy\Exception\Doubler\ClassMirrorException;
+use Prophecy\Exception\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionIntersectionType;
 use ReflectionMethod;
@@ -63,7 +65,7 @@ class ClassMirror
             if (true === $class->isInterface()) {
                 throw new InvalidArgumentException(sprintf(
                     "Could not reflect %s as a class, because it\n"
-                    ."is interface - use the second argument instead.",
+                    .'is interface - use the second argument instead.',
                     $class->getName()
                 ));
             }
@@ -75,14 +77,14 @@ class ClassMirror
             if (!$interface instanceof ReflectionClass) {
                 throw new InvalidArgumentException(sprintf(
                     "[ReflectionClass \$interface1 [, ReflectionClass \$interface2]] array expected as\n"
-                    ."a second argument to `ClassMirror::reflect(...)`, but got %s.",
+                    .'a second argument to `ClassMirror::reflect(...)`, but got %s.',
                     is_object($interface) ? $interface::class.' class' : gettype($interface)
                 ));
             }
             if (false === $interface->isInterface()) {
                 throw new InvalidArgumentException(sprintf(
                     "Could not reflect %s as an interface, because it\n"
-                    ."is class - use the first argument instead.",
+                    .'is class - use the first argument instead.',
                     $interface->getName()
                 ));
             }
@@ -102,7 +104,8 @@ class ClassMirror
     {
         if (true === $class->isFinal()) {
             throw new ClassMirrorException(sprintf(
-                'Could not reflect class %s as it is marked final.', $class->getName()
+                'Could not reflect class %s as it is marked final.',
+                $class->getName()
             ), $class);
         }
 

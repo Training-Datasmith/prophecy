@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -33,12 +35,14 @@ class ClassCodeGenerator
         $classname = array_pop($parts);
         $namespace = implode('\\', $parts);
 
-        $code = sprintf("%sclass %s extends \%s implements %s {\n",
+        $code = sprintf(
+            "%sclass %s extends \%s implements %s {\n",
             $class->isReadOnly() ? 'readonly ' : '',
             $classname,
             $class->getParentClass(),
-            implode(', ',
-                array_map(fn(string $interface) => '\\'.$interface, $class->getInterfaces())
+            implode(
+                ', ',
+                array_map(fn (string $interface) => '\\'.$interface, $class->getInterfaces())
             )
         );
 
@@ -57,7 +61,8 @@ class ClassCodeGenerator
 
     private function generateMethod(Node\MethodNode $method): string
     {
-        $php = sprintf("%s %s function %s%s(%s)%s {\n",
+        $php = sprintf(
+            "%s %s function %s%s(%s)%s {\n",
             $method->getVisibility(),
             $method->isStatic() ? 'static' : '',
             $method->returnsReference() ? '&' : '',

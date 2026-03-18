@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fixtures\Prophecy;
 
 class WithArguments
@@ -7,7 +9,7 @@ class WithArguments
     public function methodWithArgs(\ArrayAccess $arg_1, array $arg_2 = [], ?\ArrayAccess $arg_3 = null)
     {
     }
-    
+
     public function methodWithoutTypeHints($arg)
     {
     }

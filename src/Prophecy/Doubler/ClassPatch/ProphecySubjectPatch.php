@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,10 +13,10 @@
 
 namespace Prophecy\Doubler\ClassPatch;
 
+use Prophecy\Doubler\Generator\Node\ArgumentNode;
 use Prophecy\Doubler\Generator\Node\ArgumentTypeNode;
 use Prophecy\Doubler\Generator\Node\ClassNode;
 use Prophecy\Doubler\Generator\Node\MethodNode;
-use Prophecy\Doubler\Generator\Node\ArgumentNode;
 use Prophecy\Doubler\Generator\Node\Type\ObjectType;
 
 /**
@@ -63,7 +65,8 @@ class ProphecySubjectPatch implements ClassPatchInterface
         $prophecyArgument = new ArgumentNode('prophecy');
         $prophecyArgument->setTypeNode(new ArgumentTypeNode(new ObjectType(\Prophecy\Prophecy\ProphecyInterface::class)));
         $prophecySetter->addArgument($prophecyArgument);
-        $prophecySetter->setCode(<<<PHP
+        $prophecySetter->setCode(
+            <<<PHP
 if (null === \$this->objectProphecyClosure) {
     \$this->objectProphecyClosure = static function () use (\$prophecy) {
         return \$prophecy;
@@ -86,7 +89,8 @@ PHP
             $node->addMethod($__call, true);
         }
 
-        $__call->setCode(<<<PHP
+        $__call->setCode(
+            <<<PHP
 throw new \Prophecy\Exception\Doubler\MethodNotFoundException(
     sprintf('Method `%s::%s()` not found.', get_class(\$this), func_get_arg(0)),
     get_class(\$this), func_get_arg(0)

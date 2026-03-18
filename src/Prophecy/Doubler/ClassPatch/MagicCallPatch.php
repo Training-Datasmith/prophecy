@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -26,7 +28,7 @@ use Prophecy\PhpDocumentor\MethodTagRetrieverInterface;
  */
 class MagicCallPatch implements ClassPatchInterface
 {
-    const MAGIC_METHODS_WITH_ARGUMENTS = ['__call', '__callStatic', '__get', '__isset', '__set', '__set_state', '__unserialize', '__unset'];
+    public const MAGIC_METHODS_WITH_ARGUMENTS = ['__call', '__callStatic', '__get', '__isset', '__set', '__set_state', '__unserialize', '__unset'];
 
     public function __construct(private readonly ?MethodTagRetrieverInterface $tagRetriever = new ClassAndInterfaceTagRetriever())
     {
@@ -47,7 +49,7 @@ class MagicCallPatch implements ClassPatchInterface
      */
     public function apply(ClassNode $node): void
     {
-        $types = array_filter($node->getInterfaces(), fn(string $interface) => !str_starts_with($interface, 'Prophecy\\'));
+        $types = array_filter($node->getInterfaces(), fn (string $interface) => !str_starts_with($interface, 'Prophecy\\'));
         $types[] = $node->getParentClass();
 
         foreach ($types as $type) {

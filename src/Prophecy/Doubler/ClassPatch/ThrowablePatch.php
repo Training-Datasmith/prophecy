@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Doubler\ClassPatch;
 
 use Prophecy\Doubler\Generator\Node\ClassNode;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Exception\Prediction;
 
 use PhpSpec\ObjectBehavior;
@@ -8,19 +10,19 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class NoCallsExceptionSpec extends ObjectBehavior
 {
-    function let(ObjectProphecy $objectProphecy, MethodProphecy $methodProphecy)
+    public function let(ObjectProphecy $objectProphecy, MethodProphecy $methodProphecy)
     {
         $methodProphecy->getObjectProphecy()->willReturn($objectProphecy);
 
         $this->beConstructedWith('message', $methodProphecy);
     }
 
-    function it_is_PredictionException()
+    public function it_is_PredictionException()
     {
         $this->shouldHaveType('Prophecy\Exception\Prediction\PredictionException');
     }
 
-    function it_extends_MethodProphecyException()
+    public function it_extends_MethodProphecyException()
     {
         $this->shouldHaveType('Prophecy\Exception\Prophecy\MethodProphecyException');
     }

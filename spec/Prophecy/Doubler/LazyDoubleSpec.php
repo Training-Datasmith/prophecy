@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Doubler;
 
 use PhpSpec\ObjectBehavior;
@@ -8,50 +10,50 @@ use Prophecy\Prophecy\ProphecySubjectInterface;
 
 class LazyDoubleSpec extends ObjectBehavior
 {
-    function let(Doubler $doubler)
+    public function let(Doubler $doubler)
     {
         $this->beConstructedWith($doubler);
     }
 
-    function it_returns_anonymous_double_instance_by_default($doubler, ProphecySubjectInterface $double)
+    public function it_returns_anonymous_double_instance_by_default($doubler, ProphecySubjectInterface $double)
     {
-        $doubler->double(null, array())->willReturn($double);
+        $doubler->double(null, [])->willReturn($double);
 
         $this->getInstance()->shouldReturn($double);
     }
 
-    function it_returns_class_double_instance_if_set($doubler, ProphecySubjectInterface $double, \ReflectionClass $class)
+    public function it_returns_class_double_instance_if_set($doubler, ProphecySubjectInterface $double, \ReflectionClass $class)
     {
-        $doubler->double($class, array())->willReturn($double);
+        $doubler->double($class, [])->willReturn($double);
 
         $this->setParentClass($class);
 
         $this->getInstance()->shouldReturn($double);
     }
 
-    function it_returns_same_double_instance_if_called_2_times(
+    public function it_returns_same_double_instance_if_called_2_times(
         $doubler,
         ProphecySubjectInterface $double1,
         ProphecySubjectInterface $double2
     ) {
-        $doubler->double(null, array())->willReturn($double1);
-        $doubler->double(null, array())->willReturn($double2);
+        $doubler->double(null, [])->willReturn($double1);
+        $doubler->double(null, [])->willReturn($double2);
 
         $this->getInstance()->shouldReturn($double2);
         $this->getInstance()->shouldReturn($double2);
     }
 
-    function its_setParentClass_throws_ClassNotFoundException_if_class_not_found()
+    public function its_setParentClass_throws_ClassNotFoundException_if_class_not_found()
     {
         $this->shouldThrow('Prophecy\Exception\Doubler\ClassNotFoundException')
             ->duringSetParentClass('SomeUnexistingClass');
     }
 
-    function its_setParentClass_throws_exception_if_prophecy_is_already_created(
+    public function its_setParentClass_throws_exception_if_prophecy_is_already_created(
         $doubler,
         ProphecySubjectInterface $double
     ) {
-        $doubler->double(null, array())->willReturn($double);
+        $doubler->double(null, [])->willReturn($double);
 
         $this->getInstance();
 
@@ -59,17 +61,17 @@ class LazyDoubleSpec extends ObjectBehavior
             ->duringSetParentClass('stdClass');
     }
 
-    function its_addInterface_throws_InterfaceNotFoundException_if_no_interface_found()
+    public function its_addInterface_throws_InterfaceNotFoundException_if_no_interface_found()
     {
         $this->shouldThrow('Prophecy\Exception\Doubler\InterfaceNotFoundException')
             ->duringAddInterface('SomeUnexistingInterface');
     }
 
-    function its_addInterface_throws_exception_if_prophecy_is_already_created(
+    public function its_addInterface_throws_exception_if_prophecy_is_already_created(
         $doubler,
         ProphecySubjectInterface $double
     ) {
-        $doubler->double(null, array())->willReturn($double);
+        $doubler->double(null, [])->willReturn($double);
 
         $this->getInstance();
 

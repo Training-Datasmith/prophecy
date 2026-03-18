@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,12 +13,12 @@
 
 namespace Prophecy\Call;
 
+use Prophecy\Argument\ArgumentsWildcard;
+use Prophecy\Exception\Call\UnexpectedCallException;
 use Prophecy\Exception\Prophecy\MethodProphecyException;
 use Prophecy\Prophecy\MethodProphecy;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Argument\ArgumentsWildcard;
 use Prophecy\Util\StringUtil;
-use Prophecy\Exception\Call\UnexpectedCallException;
 use SplObjectStorage;
 
 /**
@@ -91,7 +93,7 @@ class CallCenter
         }
 
         // Sort matches by their score value
-        @usort($matches, fn(array $match1, array $match2) => $match2[0] - $match1[0]);
+        @usort($matches, fn (array $match1, array $match2) => $match2[0] - $match1[0]);
 
         $score = $matches[0][0];
         // If Highest rated method prophecy has a promise - execute it or return null instead
@@ -114,7 +116,12 @@ class CallCenter
         }
 
         $this->recordedCalls[] = $call = new Call(
-            $methodName, $arguments, $returnValue, $exception, $file, $line
+            $methodName,
+            $arguments,
+            $returnValue,
+            $exception,
+            $file,
+            $line
         );
         $call->addScore($methodProphecy->getArgumentsWildcard(), $score);
 
@@ -137,7 +144,7 @@ class CallCenter
         $methodName = strtolower($methodName);
 
         return array_values(
-            array_filter($this->recordedCalls, fn(Call $call) => $methodName === strtolower($call->getMethodName())
+            array_filter($this->recordedCalls, fn (Call $call) => $methodName === strtolower($call->getMethodName())
                 && 0 < $call->getScore($wildcard))
         );
     }
@@ -162,9 +169,11 @@ class CallCenter
      * @param string                 $methodName
      * @param array<mixed>           $arguments
      */
-    private function createUnexpectedCallException(ObjectProphecy $prophecy, $methodName,
-        array $arguments): \Prophecy\Exception\Call\UnexpectedCallException
-    {
+    private function createUnexpectedCallException(
+        ObjectProphecy $prophecy,
+        $methodName,
+        array $arguments
+    ): \Prophecy\Exception\Call\UnexpectedCallException {
         $classname = $prophecy->reveal()::class;
         $indentationLength = 8; // looks good
         $argstring = implode(
@@ -181,7 +190,7 @@ class CallCenter
             $expected[] = sprintf(
                 "  - %s(\n"
                 ."%s\n"
-                ."    )",
+                .'    )',
                 $methodProphecy->getMethodName(),
                 implode(
                     ",\n",
@@ -200,12 +209,15 @@ class CallCenter
                 ."%s\n"
                 ."    )\n"
                 ."expected calls were:\n"
-                ."%s",
-
-                $classname, $methodName, $argstring, implode("\n", $expected)
+                .'%s',
+                $classname,
+                $methodName,
+                $argstring,
+                implode("\n", $expected)
             ),
-            $prophecy, $methodName, $arguments
-
+            $prophecy,
+            $methodName,
+            $arguments
         );
     }
 
@@ -218,7 +230,7 @@ class CallCenter
     {
         return preg_replace_callback(
             '/^/m',
-            fn() => str_repeat(' ', $indentationLength),
+            fn () => str_repeat(' ', $indentationLength),
             $arguments
         );
     }

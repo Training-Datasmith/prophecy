@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -81,7 +83,7 @@ class ArgumentsWildcard implements \Stringable
     public function __toString(): string
     {
         if (null === $this->string) {
-            $this->string = implode(', ', array_map(fn(\Prophecy\Argument\Token\TokenInterface $token) => (string) $token, $this->tokens));
+            $this->string = implode(', ', array_map(fn (\Prophecy\Argument\Token\TokenInterface $token) => (string) $token, $this->tokens));
         }
 
         return $this->string;

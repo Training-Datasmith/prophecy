@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -13,8 +15,8 @@ namespace Prophecy\Doubler;
 
 use Doctrine\Instantiator\Instantiator;
 use Prophecy\Doubler\ClassPatch\ClassPatchInterface;
-use Prophecy\Doubler\Generator\ClassMirror;
 use Prophecy\Doubler\Generator\ClassCreator;
+use Prophecy\Doubler\Generator\ClassMirror;
 use Prophecy\Exception\InvalidArgumentException;
 use ReflectionClass;
 
@@ -37,9 +39,11 @@ class Doubler
 
     private ?\Doctrine\Instantiator\Instantiator $instantiator = null;
 
-    public function __construct(?ClassMirror $mirror = null, ?ClassCreator $creator = null,
-        ?NameGenerator $namer = null)
-    {
+    public function __construct(
+        ?ClassMirror $mirror = null,
+        ?ClassCreator $creator = null,
+        ?NameGenerator $namer = null
+    ) {
         $this->mirror  = $mirror ?: new ClassMirror();
         $this->creator = $creator ?: new ClassCreator();
         $this->namer   = $namer ?: new NameGenerator();
@@ -64,7 +68,7 @@ class Doubler
     {
         $this->patches[] = $patch;
 
-        @usort($this->patches, fn(ClassPatchInterface $patch1, ClassPatchInterface $patch2) => $patch2->getPriority() - $patch1->getPriority());
+        @usort($this->patches, fn (ClassPatchInterface $patch1, ClassPatchInterface $patch2) => $patch2->getPriority() - $patch1->getPriority());
     }
 
     /**
@@ -86,7 +90,7 @@ class Doubler
             if (!$interface instanceof ReflectionClass) {
                 throw new InvalidArgumentException(sprintf(
                     "[ReflectionClass \$interface1 [, ReflectionClass \$interface2]] array expected as\n"
-                    ."a second argument to `Doubler::double(...)`, but got %s.",
+                    .'a second argument to `Doubler::double(...)`, but got %s.',
                     is_object($interface) ? $interface::class.' class' : gettype($interface)
                 ));
             }

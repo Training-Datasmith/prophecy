@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fixtures\Prophecy;
 
 class WithVariadicArgument
 {
-    function methodWithArgs(...$args)
+    public function methodWithArgs(...$args)
     {
     }
 }

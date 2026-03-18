@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -63,7 +65,8 @@ class MethodNode
 
         if (!\in_array($visibility, ['public', 'private', 'protected'], true)) {
             throw new InvalidArgumentException(sprintf(
-                '`%s` method visibility is not supported.', $visibility
+                '`%s` method visibility is not supported.',
+                $visibility
             ));
         }
 
@@ -201,7 +204,10 @@ class MethodNode
     public function useParentCode(): void
     {
         $this->code = sprintf(
-            'return parent::%s(%s);', $this->getName(), implode(', ',
+            'return parent::%s(%s);',
+            $this->getName(),
+            implode(
+                ', ',
                 array_map($this->generateArgument(...), $this->arguments)
             )
         );

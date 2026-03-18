@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -30,7 +32,8 @@ class TypeToken implements TokenInterface
         $checker = "is_{$type}";
         if (!function_exists($checker) && !interface_exists($type) && !class_exists($type)) {
             throw new InvalidArgumentException(sprintf(
-                'Type or class name expected as an argument to TypeToken, but got %s.', $type
+                'Type or class name expected as an argument to TypeToken, but got %s.',
+                $type
             ));
         }
 

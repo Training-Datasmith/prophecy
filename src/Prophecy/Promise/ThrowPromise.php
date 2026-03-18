@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -12,9 +14,9 @@
 namespace Prophecy\Promise;
 
 use Doctrine\Instantiator\Instantiator;
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\MethodProphecy;
 use Prophecy\Exception\InvalidArgumentException;
+use Prophecy\Prophecy\MethodProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionClass;
 
 /**

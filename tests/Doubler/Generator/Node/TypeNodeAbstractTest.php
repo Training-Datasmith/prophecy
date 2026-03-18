@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Prophecy\Doubler\Generator\Node;
 
 use PHPUnit\Framework\Attributes\DataProvider;

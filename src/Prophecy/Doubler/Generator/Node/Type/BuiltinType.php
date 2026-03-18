@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Doubler\Generator\Node\Type;
 
 final readonly class BuiltinType implements SimpleType
 {
-    public function __construct(private string $type) {}
+    public function __construct(private string $type)
+    {
+    }
 
     public function __toString(): string
     {

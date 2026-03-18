@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Prediction;
 
 use PhpSpec\ObjectBehavior;
@@ -10,17 +12,17 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class NoCallsPredictionSpec extends ObjectBehavior
 {
-    function it_is_prediction()
+    public function it_is_prediction()
     {
         $this->shouldHaveType('Prophecy\Prediction\PredictionInterface');
     }
 
-    function it_does_nothing_if_there_is_no_calls_made(ObjectProphecy $object, MethodProphecy $method)
+    public function it_does_nothing_if_there_is_no_calls_made(ObjectProphecy $object, MethodProphecy $method)
     {
-        $this->check(array(), $object, $method)->shouldReturn(null);
+        $this->check([], $object, $method)->shouldReturn(null);
     }
 
-    function it_throws_UnexpectedCallsException_if_calls_found(
+    public function it_throws_UnexpectedCallsException_if_calls_found(
         ObjectProphecy $object,
         MethodProphecy $method,
         Call $call,
@@ -33,10 +35,10 @@ class NoCallsPredictionSpec extends ObjectBehavior
         $arguments->__toString()->willReturn('123');
 
         $call->getMethodName()->willReturn('getName');
-        $call->getArguments()->willReturn(array(5, 4, 'three'));
+        $call->getArguments()->willReturn([5, 4, 'three']);
         $call->getCallPlace()->willReturn('unknown');
 
         $this->shouldThrow('Prophecy\Exception\Prediction\UnexpectedCallsException')
-            ->duringCheck(array($call), $object, $method);
+            ->duringCheck([$call], $object, $method);
     }
 }

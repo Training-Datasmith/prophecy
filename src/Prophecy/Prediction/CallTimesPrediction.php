@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,12 +13,12 @@
 
 namespace Prophecy\Prediction;
 
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\MethodProphecy;
 use Prophecy\Argument\ArgumentsWildcard;
 use Prophecy\Argument\Token\AnyValuesToken;
-use Prophecy\Util\StringUtil;
 use Prophecy\Exception\Prediction\UnexpectedCallsCountException;
+use Prophecy\Prophecy\MethodProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Util\StringUtil;
 
 /**
  * Tests that there was exact amount of calls made.
@@ -53,7 +55,6 @@ class CallTimesPrediction implements PredictionInterface
                 "Expected exactly %d calls that match:\n"
                 ."  %s->%s(%s)\n"
                 ."but %d were made:\n%s",
-
                 $this->times,
                 $object->reveal()::class,
                 $method->getMethodName(),
@@ -67,7 +68,6 @@ class CallTimesPrediction implements PredictionInterface
                 ."  %s->%s(%s)\n"
                 ."but none were made.\n"
                 ."Recorded `%s(...)` calls:\n%s",
-
                 $this->times,
                 $object->reveal()::class,
                 $method->getMethodName(),
@@ -79,8 +79,7 @@ class CallTimesPrediction implements PredictionInterface
             $message = sprintf(
                 "Expected exactly %d calls that match:\n"
                 ."  %s->%s(%s)\n"
-                ."but none were made.",
-
+                .'but none were made.',
                 $this->times,
                 $object->reveal()::class,
                 $method->getMethodName(),

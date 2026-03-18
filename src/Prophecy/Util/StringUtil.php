@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -44,7 +46,7 @@ class StringUtil
 
             $stringify = [$this, __FUNCTION__];
 
-            return '['.implode(', ', array_map(fn($item, int|string $key) => (is_integer($key) ? $key : '"'.$key.'"')
+            return '['.implode(', ', array_map(fn ($item, int|string $key) => (is_integer($key) ? $key : '"'.$key.'"')
                 .' => '.call_user_func($stringify, $item), $value, array_keys($value))).']';
         }
         if (\is_resource($value)) {
@@ -83,7 +85,8 @@ class StringUtil
     {
         $self = $this;
 
-        return implode(PHP_EOL, array_map(fn(Call $call) => sprintf('  - %s(%s) @ %s',
+        return implode(PHP_EOL, array_map(fn (Call $call) => sprintf(
+            '  - %s(%s) @ %s',
             $call->getMethodName(),
             implode(', ', array_map($self->stringify(...), $call->getArguments())),
             str_replace(GETCWD().DIRECTORY_SEPARATOR, '', $call->getCallPlace())

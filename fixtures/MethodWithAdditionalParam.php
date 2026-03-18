@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fixtures\Prophecy;
 
 abstract class MethodWithAdditionalParam extends WithArguments implements Named

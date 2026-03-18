@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Doubler\Generator\Node\Type;
 
 final readonly class ObjectType implements SimpleType
@@ -7,7 +9,9 @@ final readonly class ObjectType implements SimpleType
     /**
      * @param class-string $type
      */
-    public function __construct(private string $type) {}
+    public function __construct(private string $type)
+    {
+    }
 
     public function __toString(): string
     {

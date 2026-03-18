@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,18 +13,18 @@
 
 namespace Prophecy;
 
+use Prophecy\Call\CallCenter;
 use Prophecy\Doubler\CachedDoubler;
+use Prophecy\Doubler\ClassPatch;
 use Prophecy\Doubler\Doubler;
 use Prophecy\Doubler\LazyDouble;
-use Prophecy\Doubler\ClassPatch;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\RevealerInterface;
-use Prophecy\Prophecy\Revealer;
-use Prophecy\Call\CallCenter;
-use Prophecy\Util\StringUtil;
-use Prophecy\Exception\Prediction\PredictionException;
 use Prophecy\Exception\Prediction\AggregateException;
+use Prophecy\Exception\Prediction\PredictionException;
+use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\Revealer;
+use Prophecy\Prophecy\RevealerInterface;
+use Prophecy\Util\StringUtil;
 
 /**
  * Prophet creates prophecies.

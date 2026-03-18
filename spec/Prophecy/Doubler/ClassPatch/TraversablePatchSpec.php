@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Doubler\ClassPatch;
 
 use PhpSpec\ObjectBehavior;
@@ -9,38 +11,38 @@ use Prophecy\Doubler\Generator\Node\MethodNode;
 
 class TraversablePatchSpec extends ObjectBehavior
 {
-    function it_is_a_patch()
+    public function it_is_a_patch()
     {
         $this->shouldBeAnInstanceOf('Prophecy\Doubler\ClassPatch\ClassPatchInterface');
     }
 
-    function it_supports_class_that_implements_only_Traversable(ClassNode $node)
+    public function it_supports_class_that_implements_only_Traversable(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array('Traversable'));
+        $node->getInterfaces()->willReturn(['Traversable']);
 
         $this->supports($node)->shouldReturn(true);
     }
 
-    function it_does_not_support_class_that_implements_Iterator(ClassNode $node)
+    public function it_does_not_support_class_that_implements_Iterator(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array('Traversable', 'Iterator'));
+        $node->getInterfaces()->willReturn(['Traversable', 'Iterator']);
 
         $this->supports($node)->shouldReturn(false);
     }
 
-    function it_does_not_support_class_that_implements_IteratorAggregate(ClassNode $node)
+    public function it_does_not_support_class_that_implements_IteratorAggregate(ClassNode $node)
     {
-        $node->getInterfaces()->willReturn(array('Traversable', 'IteratorAggregate'));
+        $node->getInterfaces()->willReturn(['Traversable', 'IteratorAggregate']);
 
         $this->supports($node)->shouldReturn(false);
     }
 
-    function it_has_100_priority()
+    public function it_has_100_priority()
     {
         $this->getPriority()->shouldReturn(100);
     }
 
-    function it_forces_node_to_implement_IteratorAggregate(ClassNode $node)
+    public function it_forces_node_to_implement_IteratorAggregate(ClassNode $node)
     {
         $node->addInterface('Iterator')->shouldBeCalled();
 
@@ -49,7 +51,7 @@ class TraversablePatchSpec extends ObjectBehavior
         $this->apply($node);
     }
 
-    function it_adds_methods_to_implement_iterator(ClassNode $node)
+    public function it_adds_methods_to_implement_iterator(ClassNode $node)
     {
         $node->addInterface('Iterator')->shouldBeCalled();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,8 +13,8 @@
 
 namespace Prophecy\Doubler;
 
-use Prophecy\Exception\Doubler\DoubleException;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
+use Prophecy\Exception\Doubler\DoubleException;
 use Prophecy\Exception\Doubler\InterfaceNotFoundException;
 use ReflectionClass;
 
@@ -134,7 +136,9 @@ class LazyDouble
         if (null === $this->double) {
             if (null !== $this->arguments) {
                 return $this->double = $this->doubler->double(
-                    $this->class, $this->interfaces, $this->arguments
+                    $this->class,
+                    $this->interfaces,
+                    $this->arguments
                 );
             }
 

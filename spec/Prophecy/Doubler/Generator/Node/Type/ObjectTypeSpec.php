@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Doubler\Generator\Node\Type;
 
 use PhpSpec\ObjectBehavior;
@@ -8,17 +10,17 @@ use stdClass;
 
 class ObjectTypeSpec extends ObjectBehavior
 {
-    function let(): void
+    public function let(): void
     {
         $this->beConstructedWith(stdClass::class);
     }
 
-    function it_implements_type_interface(): void
+    public function it_implements_type_interface(): void
     {
         $this->shouldImplement(TypeInterface::class);
     }
 
-    function it_is_stringable(): void
+    public function it_is_stringable(): void
     {
         $this->beConstructedWith('stdClass');
         $this->getType()->shouldReturn('stdClass');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -22,7 +24,9 @@ final class FactoryProvider
 {
     private static ?\SebastianBergmann\Comparator\Factory $instance = null;
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     public static function getInstance(): Factory
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -13,13 +15,13 @@ namespace Prophecy\Prophecy;
 
 use Prophecy\Argument;
 use Prophecy\Exception\Doubler\ClassMirrorException;
-use Prophecy\Exception\Prediction\PredictionException;
-use Prophecy\Prophet;
-use Prophecy\Promise;
-use Prophecy\Prediction;
 use Prophecy\Exception\Doubler\MethodNotFoundException;
 use Prophecy\Exception\InvalidArgumentException;
+use Prophecy\Exception\Prediction\PredictionException;
 use Prophecy\Exception\Prophecy\MethodProphecyException;
+use Prophecy\Prediction;
+use Prophecy\Promise;
+use Prophecy\Prophet;
 use ReflectionNamedType;
 use ReflectionUnionType;
 
@@ -62,7 +64,9 @@ class MethodProphecy
         $double = $objectProphecy->reveal();
         if (!method_exists($double, $methodName)) {
             throw new MethodNotFoundException(sprintf(
-                'Method `%s::%s()` is not defined.', $double::class, $methodName
+                'Method `%s::%s()` is not defined.',
+                $double::class,
+                $methodName
             ), $double::class, $methodName, $arguments);
         }
 
@@ -73,7 +77,7 @@ class MethodProphecy
         if ($reflectedMethod->isFinal()) {
             throw new MethodProphecyException(sprintf(
                 "Can not add prophecy for a method `%s::%s()`\n"
-                ."as it is a final method.",
+                .'as it is a final method.',
                 $double::class,
                 $methodName
             ), $this);
@@ -104,7 +108,7 @@ class MethodProphecy
             }
 
             $types = array_map(
-                fn(ReflectionNamedType $type) => $type->getName(),
+                fn (ReflectionNamedType $type) => $type->getName(),
                 $types
             );
 
@@ -122,7 +126,7 @@ class MethodProphecy
                     }
 
                     // objects are higher priority than scalars
-                    $isObject = (static fn($type) => class_exists($type) || interface_exists($type));
+                    $isObject = (static fn ($type) => class_exists($type) || interface_exists($type));
                     if ($isObject($type1) && !$isObject($type2)) {
                         return -1;
                     }
@@ -156,11 +160,14 @@ class MethodProphecy
 
                     case 'callable':
                     case 'Closure':
-                        return function (): void {};
+                        return function (): void {
+                        };
 
                     case 'Traversable':
                     case 'Generator':
-                        return (function () { yield; })();
+                        return (function () {
+                            yield;
+                        })();
 
                     case 'object':
                         $prophet = new Prophet();

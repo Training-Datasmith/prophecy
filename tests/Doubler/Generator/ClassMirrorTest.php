@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Prophecy\Doubler\Generator;
 
 use Fixtures\Prophecy\SelfReferencing;
@@ -25,7 +27,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $node = $mirror->reflect($class, array());
+        $node = $mirror->reflect($class, []);
 
         $this->assertCount(7, $node->getMethods());
     }
@@ -37,7 +39,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertEquals('Fixtures\Prophecy\WithProtectedAbstractMethod', $classNode->getParentClass());
 
@@ -54,7 +56,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertEquals('Fixtures\Prophecy\WithStaticMethod', $classNode->getParentClass());
 
@@ -71,7 +73,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
         $methodNode = $classNode->getMethod('methodWithoutTypeHints');
         $argNodes = $methodNode->getArguments();
 
@@ -92,12 +94,11 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
         $methodNode = $classNode->getMethod('methodWithArgs');
         $argNodes = $methodNode->getArguments();
 
         $this->assertCount(3, $argNodes);
-
 
         $this->assertEquals('arg_1', $argNodes[0]->getName());
         $this->assertEquals(new ArgumentTypeNode(new ObjectType('ArrayAccess')), $argNodes[0]->getTypeNode());
@@ -106,7 +107,7 @@ class ClassMirrorTest extends TestCase
         $this->assertEquals('arg_2', $argNodes[1]->getName());
         $this->assertEquals(new ArgumentTypeNode(new BuiltinType('array')), $argNodes[1]->getTypeNode());
         $this->assertTrue($argNodes[1]->isOptional());
-        $this->assertEquals(array(), $argNodes[1]->getDefault());
+        $this->assertEquals([], $argNodes[1]->getDefault());
         $this->assertFalse($argNodes[1]->isPassedByReference());
         $this->assertFalse($argNodes[1]->isVariadic());
 
@@ -128,7 +129,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
         $methodNode = $classNode->getMethod('methodWithArgs');
         $argNodes = $methodNode->getArguments();
 
@@ -158,7 +159,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
         $methodNode = $classNode->getMethod('methodWithArgs');
         $argNodes = $methodNode->getArguments();
 
@@ -178,7 +179,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
         $methodNode = $classNode->getMethod('methodWithTypeHintedArgs');
         $argNodes = $methodNode->getArguments();
 
@@ -198,7 +199,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertTrue($classNode->hasMethod('methodWithReferenceArgument'));
 
@@ -219,7 +220,7 @@ class ClassMirrorTest extends TestCase
 
         $this->expectException(ClassMirrorException::class);
 
-        $mirror->reflect($class, array());
+        $mirror->reflect($class, []);
     }
 
     #[Test]
@@ -229,7 +230,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertCount(0, $classNode->getMethods());
     }
@@ -241,7 +242,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertCount(1, $classNode->getUnextendableMethods());
         $this->assertFalse($classNode->isExtendable('finalImplementation'));
@@ -256,7 +257,7 @@ class ClassMirrorTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $mirror->reflect($class, array());
+        $mirror->reflect($class, []);
     }
 
     #[Test]
@@ -264,17 +265,17 @@ class ClassMirrorTest extends TestCase
     {
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect(null, array(
+        $classNode = $mirror->reflect(null, [
             new \ReflectionClass('Fixtures\Prophecy\Named'),
             new \ReflectionClass('Fixtures\Prophecy\ModifierInterface'),
-        ));
+        ]);
 
         $this->assertEquals('stdClass', $classNode->getParentClass());
-        $this->assertEquals(array(
+        $this->assertEquals([
             'Prophecy\Doubler\Generator\ReflectionInterface',
             'Fixtures\Prophecy\ModifierInterface',
             'Fixtures\Prophecy\Named',
-        ), $classNode->getInterfaces());
+        ], $classNode->getInterfaces());
 
         $this->assertCount(3, $classNode->getMethods());
         $this->assertTrue($classNode->hasMethod('getName'));
@@ -289,7 +290,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertCount(2, $classNode->getMethods());
         $this->assertTrue($classNode->hasMethod('isAbstract'));
@@ -304,7 +305,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertCount(0, $classNode->getMethods());
     }
@@ -316,7 +317,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $this->assertCount(3, $classNode->getMethods());
         $this->assertTrue($classNode->hasMethod('getName'));
@@ -337,7 +338,7 @@ class ClassMirrorTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $mirror->reflect(null, array($class));
+        $mirror->reflect(null, [$class]);
     }
 
     #[Test]
@@ -347,7 +348,7 @@ class ClassMirrorTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $mirror->reflect(null, array(null));
+        $mirror->reflect(null, [null]);
     }
 
     #[Test]
@@ -355,7 +356,7 @@ class ClassMirrorTest extends TestCase
     {
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect(new \ReflectionClass('Fixtures\Prophecy\OptionalDepsClass'), array());
+        $classNode = $mirror->reflect(new \ReflectionClass('Fixtures\Prophecy\OptionalDepsClass'), []);
         $method = $classNode->getMethod('iHaveAStrangeTypeHintedArg');
         $arguments = $method->getArguments();
         $this->assertEquals(new ArgumentTypeNode('I\Simply\Am\Nonexistent'), $arguments[0]->getTypeNode());
@@ -366,7 +367,7 @@ class ClassMirrorTest extends TestCase
     {
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect(new \ReflectionClass('Fixtures\Prophecy\NullableArrayParameter'), array());
+        $classNode = $mirror->reflect(new \ReflectionClass('Fixtures\Prophecy\NullableArrayParameter'), []);
         $method = $classNode->getMethod('iHaveNullableArrayParameterWithNotNullDefaultValue');
         $arguments = $method->getArguments();
         $this->assertEquals(new ArgumentTypeNode(new UnionType([
@@ -380,20 +381,20 @@ class ClassMirrorTest extends TestCase
     {
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect(new \ReflectionClass('Fixtures\Prophecy\OptionalDepsClass'), array());
+        $classNode = $mirror->reflect(new \ReflectionClass('Fixtures\Prophecy\OptionalDepsClass'), []);
         $method = $classNode->getMethod('iHaveAnEvenStrangerTypeHintedArg');
         $arguments = $method->getArguments();
         $this->assertEquals(new ArgumentTypeNode('I\Simply\Am\Not'), $arguments[0]->getTypeNode());
     }
 
     #[Test]
-    function it_doesnt_fail_when_method_is_extended_with_more_params(): void
+    public function it_doesnt_fail_when_method_is_extended_with_more_params(): void
     {
         $mirror = new ClassMirror();
 
         $classNode = $mirror->reflect(
             new \ReflectionClass('Fixtures\Prophecy\MethodWithAdditionalParam'),
-            array(new \ReflectionClass('Fixtures\Prophecy\Named'))
+            [new \ReflectionClass('Fixtures\Prophecy\Named')]
         );
         $method = $classNode->getMethod('getName');
         $this->assertCount(1, $method->getArguments());
@@ -403,11 +404,11 @@ class ClassMirrorTest extends TestCase
     }
 
     #[Test]
-    function it_doesnt_fail_to_mock_self_referencing_interface(): void
+    public function it_doesnt_fail_to_mock_self_referencing_interface(): void
     {
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect(null, array(new \ReflectionClass(SelfReferencing::class)));
+        $classNode = $mirror->reflect(null, [new \ReflectionClass(SelfReferencing::class)]);
 
         $method = $classNode->getMethod('__invoke');
         $this->assertCount(1, $method->getArguments());
@@ -418,7 +419,7 @@ class ClassMirrorTest extends TestCase
     }
 
     #[Test]
-    function it_changes_argument_names_if_they_are_varying(): void
+    public function it_changes_argument_names_if_they_are_varying(): void
     {
         // Use test doubles in this test, as arguments named ... in the Reflection API can only happen for internal classes
         $prophet = new Prophet();
@@ -432,10 +433,10 @@ class ClassMirrorTest extends TestCase
         $class->getName()->willReturn('Custom\ClassName');
         $class->isInterface()->willReturn(false);
         $class->isFinal()->willReturn(false);
-        $class->getMethods(\ReflectionMethod::IS_PUBLIC)->willReturn(array($method));
-        $class->getMethods(\ReflectionMethod::IS_ABSTRACT)->willReturn(array());
+        $class->getMethods(\ReflectionMethod::IS_PUBLIC)->willReturn([$method]);
+        $class->getMethods(\ReflectionMethod::IS_ABSTRACT)->willReturn([]);
 
-        $method->getParameters()->willReturn(array($parameter));
+        $method->getParameters()->willReturn([$parameter]);
         $method->getName()->willReturn('methodName');
         $method->isFinal()->willReturn(false);
         $method->isProtected()->willReturn(false);
@@ -460,7 +461,7 @@ class ClassMirrorTest extends TestCase
 
         $mirror = new ClassMirror();
 
-        $classNode = $mirror->reflect($class->reveal(), array());
+        $classNode = $mirror->reflect($class->reveal(), []);
 
         $methodNodes = $classNode->getMethods();
 
@@ -479,7 +480,6 @@ class ClassMirrorTest extends TestCase
 
         $classNode = (new ClassMirror())->reflect(new \ReflectionClass('Fixtures\Prophecy\UnionReturnTypes'), []);
         $methodNode = $classNode->getMethods()['doSomething'];
-
 
         $this->assertEquals(new UnionType([
             new ObjectType('stdClass'),
@@ -685,7 +685,6 @@ class ClassMirrorTest extends TestCase
         }
 
         $classNode = (new ClassMirror())->reflect(new \ReflectionClass('Fixtures\Prophecy\DnfArgumentType'), []);
-
 
         $method = $classNode->getMethod('doSomething');
         $argType = $method->getArguments()[0]->getTypeNode();

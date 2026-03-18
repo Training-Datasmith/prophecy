@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Prophecy\Doubler\ClassPatch;
 
 use PHPUnit\Framework\Attributes\Test;
@@ -50,7 +52,7 @@ class MagicCallPatchTest extends TestCase
     private function applyPatchTo(\ReflectionClass $class): ClassNode
     {
         $mirror = new ClassMirror();
-        $classNode = $mirror->reflect($class, array());
+        $classNode = $mirror->reflect($class, []);
 
         $patch = new MagicCallPatch();
 

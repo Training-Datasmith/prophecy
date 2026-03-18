@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -40,9 +42,14 @@ class Call
      * @param null|string $file
      * @param null|int    $line
      */
-    public function __construct(private $methodName, private readonly array $arguments, private $returnValue,
-        private readonly ?Exception $exception, $file, $line)
-    {
+    public function __construct(
+        private $methodName,
+        private readonly array $arguments,
+        private $returnValue,
+        private readonly ?Exception $exception,
+        $file,
+        $line
+    ) {
         $this->scores      = new \SplObjectStorage();
 
         if ($file) {

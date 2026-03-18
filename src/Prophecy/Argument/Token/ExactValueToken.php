@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -12,9 +14,9 @@
 namespace Prophecy\Argument\Token;
 
 use Prophecy\Comparator\FactoryProvider;
+use Prophecy\Util\StringUtil;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
-use Prophecy\Util\StringUtil;
 
 /**
  * Exact value token.
@@ -50,7 +52,8 @@ class ExactValueToken implements TokenInterface
     {
         if (is_object($argument) && is_object($this->value)) {
             $comparator = $this->comparatorFactory->getComparatorFor(
-                $argument, $this->value
+                $argument,
+                $this->value
             );
 
             try {

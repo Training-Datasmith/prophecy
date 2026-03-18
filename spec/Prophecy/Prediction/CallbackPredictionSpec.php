@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Prediction;
 
 use PhpSpec\ObjectBehavior;
@@ -10,17 +12,17 @@ use RuntimeException;
 
 class CallbackPredictionSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('get_class');
     }
 
-    function it_is_prediction()
+    public function it_is_prediction()
     {
         $this->shouldHaveType('Prophecy\Prediction\PredictionInterface');
     }
 
-    function it_proxies_call_to_callback(ObjectProphecy $object, MethodProphecy $method, Call $call)
+    public function it_proxies_call_to_callback(ObjectProphecy $object, MethodProphecy $method, Call $call)
     {
         $returnFirstCallCallback = function ($calls, $object, $method) {
             throw new RuntimeException();
@@ -28,6 +30,6 @@ class CallbackPredictionSpec extends ObjectBehavior
 
         $this->beConstructedWith($returnFirstCallCallback);
 
-        $this->shouldThrow('RuntimeException')->duringCheck(array($call), $object, $method);
+        $this->shouldThrow('RuntimeException')->duringCheck([$call], $object, $method);
     }
 }

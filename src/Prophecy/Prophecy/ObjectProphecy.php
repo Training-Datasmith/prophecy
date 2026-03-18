@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,16 +13,16 @@
 
 namespace Prophecy\Prophecy;
 
-use Prophecy\Comparator\FactoryProvider;
-use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\Comparator\Factory as ComparatorFactory;
-use Prophecy\Call\Call;
-use Prophecy\Doubler\LazyDouble;
 use Prophecy\Argument\ArgumentsWildcard;
+use Prophecy\Call\Call;
 use Prophecy\Call\CallCenter;
-use Prophecy\Exception\Prophecy\ObjectProphecyException;
+use Prophecy\Comparator\FactoryProvider;
+use Prophecy\Doubler\LazyDouble;
 use Prophecy\Exception\Prediction\AggregateException;
 use Prophecy\Exception\Prediction\PredictionException;
+use Prophecy\Exception\Prophecy\ObjectProphecyException;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
 /**
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
@@ -243,7 +245,8 @@ class ObjectProphecy implements ProphecyInterface
         foreach ($this->getMethodProphecies($methodName) as $prophecy) {
             $argumentsWildcard = $prophecy->getArgumentsWildcard();
             $comparator = $this->comparatorFactory->getComparatorFor(
-                $argumentsWildcard, $arguments
+                $argumentsWildcard,
+                $arguments
             );
 
             try {

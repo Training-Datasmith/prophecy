@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -45,7 +47,8 @@ class ClassCreator
             if (count($class->getInterfaces())) {
                 throw new ClassCreatorException(sprintf(
                     'Could not double `%s` and implement interfaces: [%s].',
-                    $class->getParentClass(), implode(', ', $class->getInterfaces())
+                    $class->getParentClass(),
+                    implode(', ', $class->getInterfaces())
                 ), $class);
             }
 

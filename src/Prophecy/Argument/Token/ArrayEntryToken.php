@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -60,7 +62,7 @@ class ArrayEntryToken implements TokenInterface
 
         $keyScores = array_map($this->key->scoreArgument(...), array_keys($argument));
         $valueScores = array_map($this->value->scoreArgument(...), $argument);
-        $scoreEntry = (static fn($value, $key) => $value && $key ? (int) min(8, ($key + $value) / 2) : false);
+        $scoreEntry = (static fn ($value, $key) => $value && $key ? (int) min(8, ($key + $value) / 2) : false);
 
         return max(array_map($scoreEntry, $valueScores, $keyScores));
     }

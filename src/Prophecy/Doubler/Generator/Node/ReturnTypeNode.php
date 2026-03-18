@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Doubler\Generator\Node;
 
 use Prophecy\Doubler\Generator\Node\Type\BuiltinType;

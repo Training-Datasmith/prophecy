@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,4 +13,6 @@
 
 namespace Prophecy\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException implements Exception {}
+class InvalidArgumentException extends \InvalidArgumentException implements Exception
+{
+}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prophecy\Exception\Doubler;
 
 class MethodNotExtendableException extends DoubleException
@@ -13,7 +15,6 @@ class MethodNotExtendableException extends DoubleException
     {
         parent::__construct($message);
     }
-
 
     /**
      * @return string

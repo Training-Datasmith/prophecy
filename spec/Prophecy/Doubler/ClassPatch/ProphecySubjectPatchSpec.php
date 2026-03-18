@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Prophecy\Doubler\ClassPatch;
 
 use PhpSpec\ObjectBehavior;
@@ -11,27 +13,27 @@ use Prophecy\Doubler\Generator\Node\Type\BuiltinType;
 
 class ProphecySubjectPatchSpec extends ObjectBehavior
 {
-    function it_is_a_patch()
+    public function it_is_a_patch()
     {
         $this->shouldBeAnInstanceOf('Prophecy\Doubler\ClassPatch\ClassPatchInterface');
     }
 
-    function it_has_priority_of_0()
+    public function it_has_priority_of_0()
     {
         $this->getPriority()->shouldReturn(0);
     }
 
-    function it_supports_any_class(ClassNode $node)
+    public function it_supports_any_class(ClassNode $node)
     {
         $this->supports($node)->shouldReturn(true);
     }
 
-    function it_forces_class_to_implement_ProphecySubjectInterface(ClassNode $node)
+    public function it_forces_class_to_implement_ProphecySubjectInterface(ClassNode $node)
     {
         $node->addInterface('Prophecy\Prophecy\ProphecySubjectInterface')->shouldBeCalled();
 
         $node->addProperty('objectProphecyClosure', 'private')->willReturn(null);
-        $node->getMethods()->willReturn(array());
+        $node->getMethods()->willReturn([]);
         $node->hasMethod(Argument::any())->willReturn(false);
         $node->addMethod(Argument::type('Prophecy\Doubler\Generator\Node\MethodNode'), true)->willReturn(null);
         $node->addMethod(Argument::type('Prophecy\Doubler\Generator\Node\MethodNode'), true)->willReturn(null);
@@ -39,7 +41,7 @@ class ProphecySubjectPatchSpec extends ObjectBehavior
         $this->apply($node);
     }
 
-    function it_forces_all_class_methods_except_constructor_to_proxy_calls_into_prophecy_makeCall(
+    public function it_forces_all_class_methods_except_constructor_to_proxy_calls_into_prophecy_makeCall(
         ClassNode $node,
         MethodNode $constructor,
         MethodNode $method1,
@@ -64,12 +66,12 @@ class ProphecySubjectPatchSpec extends ObjectBehavior
         $method3->getReturnTypeNode()->willReturn(new ReturnTypeNode(new BuiltinType('void')));
         $method4->getReturnTypeNode()->willReturn(new ReturnTypeNode(new BuiltinType('never')));
 
-        $node->getMethods()->willReturn(array(
+        $node->getMethods()->willReturn([
             'method1' => $method1,
             'method2' => $method2,
             'method3' => $method3,
             'method4' => $method4,
-        ));
+        ]);
 
         $constructor->setCode(Argument::any())->shouldNotBeCalled();
 

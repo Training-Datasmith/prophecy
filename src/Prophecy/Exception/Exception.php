@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -17,4 +19,6 @@ namespace Prophecy\Exception;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-interface Exception extends \Throwable {}
+interface Exception extends \Throwable
+{
+}

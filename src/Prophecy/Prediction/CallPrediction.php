@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -11,13 +13,13 @@
 
 namespace Prophecy\Prediction;
 
-use Prophecy\Call\Call;
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\MethodProphecy;
 use Prophecy\Argument\ArgumentsWildcard;
 use Prophecy\Argument\Token\AnyValuesToken;
-use Prophecy\Util\StringUtil;
+use Prophecy\Call\Call;
 use Prophecy\Exception\Prediction\NoCallsException;
+use Prophecy\Prophecy\MethodProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Util\StringUtil;
 
 /**
  * Tests that there was at least one call.
@@ -50,7 +52,6 @@ class CallPrediction implements PredictionInterface
                 ."  %s->%s(%s)\n"
                 ."but expected at least one.\n"
                 ."Recorded `%s(...)` calls:\n%s",
-
                 $object->reveal()::class,
                 $method->getMethodName(),
                 $method->getArgumentsWildcard(),
@@ -62,8 +63,7 @@ class CallPrediction implements PredictionInterface
         throw new NoCallsException(sprintf(
             "No calls have been made that match:\n"
             ."  %s->%s(%s)\n"
-            ."but expected at least one.",
-
+            .'but expected at least one.',
             $object->reveal()::class,
             $method->getMethodName(),
             $method->getArgumentsWildcard()
