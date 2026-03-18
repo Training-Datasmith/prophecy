@@ -41,10 +41,8 @@ class TypeToken implements TokenInterface
      * Scores 5 if argument has the same type this token was constructed with.
      *
      * @param $argument
-     *
-     * @return bool|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int|false
     {
         $checker = "is_{$this->type}";
         if (function_exists($checker)) {
@@ -56,20 +54,16 @@ class TypeToken implements TokenInterface
 
     /**
      * Returns false.
-     *
-     * @return bool
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('type(%s)', $this->type);
     }

@@ -2,12 +2,12 @@
 
 namespace Prophecy\Doubler\Generator\Node\Type;
 
-final class ObjectType implements SimpleType
+final readonly class ObjectType implements SimpleType
 {
     /**
      * @param class-string $type
      */
-    public function __construct(private readonly string $type) {}
+    public function __construct(private string $type) {}
 
     public function __toString(): string
     {

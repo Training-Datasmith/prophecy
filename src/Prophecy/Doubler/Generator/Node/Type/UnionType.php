@@ -4,7 +4,7 @@ namespace Prophecy\Doubler\Generator\Node\Type;
 
 use Prophecy\Exception\Doubler\DoubleException;
 
-final class UnionType implements TypeInterface
+final readonly class UnionType implements TypeInterface
 {
     /**
      * @param list<SimpleType|IntersectionType> $types
@@ -42,11 +42,11 @@ final class UnionType implements TypeInterface
                 throw new DoubleException('Union types cannot contain other unions.');
             }
             if ($type instanceof IntersectionType) {
-                $typeStrings[] = implode('&', array_map(fn(SimpleType $type) => (string) $type, $type->getTypes()));
+                $typeStrings[] = implode('&', array_map(fn(SimpleType $type): string => (string) $type, $type->getTypes()));
                 continue; // Valid type, nothing to be checked
             }
             if (!$type instanceof SimpleType) {
-                throw new DoubleException(sprintf('Unexpected type "%s". Only IntersectionType and SimpleType are supported in UnionType.', get_class($type)));
+                throw new DoubleException(sprintf('Unexpected type "%s". Only IntersectionType and SimpleType are supported in UnionType.', $type::class));
             }
             $typeName = $type->getType();
             $typeStrings[] = $typeName;
@@ -105,7 +105,7 @@ final class UnionType implements TypeInterface
             }
 
             if ($type instanceof IntersectionType && count($this->types) > 1) {
-                $result .= '('.((string) $type).')';
+                $result .= '('.($type).')';
                 continue;
             }
             $result .= (string) $type;

@@ -27,7 +27,6 @@ interface PromiseInterface
      *
      * @param array<mixed>           $args
      * @param ObjectProphecy<object> $object
-     * @param MethodProphecy         $method
      *
      * @return mixed
      */

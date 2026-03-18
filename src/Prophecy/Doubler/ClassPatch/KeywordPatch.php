@@ -23,21 +23,17 @@ class KeywordPatch implements ClassPatchInterface
     /**
      * Support any class
      *
-     * @param ClassNode $node
      *
-     * @return boolean
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         return true;
     }
 
     /**
      * Remove methods that clash with php keywords
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
         $methodNames = array_keys($node->getMethods());
         $methodsToRemove = array_intersect($methodNames, $this->getKeywords());
@@ -51,7 +47,7 @@ class KeywordPatch implements ClassPatchInterface
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 49;
     }
@@ -61,7 +57,7 @@ class KeywordPatch implements ClassPatchInterface
      *
      * @return list<string>
      */
-    private function getKeywords()
+    private function getKeywords(): array
     {
         return ['__halt_compiler'];
     }

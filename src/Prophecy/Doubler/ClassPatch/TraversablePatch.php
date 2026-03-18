@@ -27,11 +27,9 @@ class TraversablePatch implements ClassPatchInterface
     /**
      * Supports nodetree, that implement Traversable, but not Iterator or IteratorAggregate.
      *
-     * @param ClassNode $node
      *
-     * @return bool
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         if (in_array('Iterator', $node->getInterfaces())) {
             return false;
@@ -44,10 +42,16 @@ class TraversablePatch implements ClassPatchInterface
             if ('Traversable' !== $interface && !is_subclass_of($interface, 'Traversable')) {
                 continue;
             }
-            if ('Iterator' === $interface || is_subclass_of($interface, 'Iterator')) {
+            if ('Iterator' === $interface) {
                 continue;
             }
-            if ('IteratorAggregate' === $interface || is_subclass_of($interface, 'IteratorAggregate')) {
+            if (is_subclass_of($interface, 'Iterator')) {
+                continue;
+            }
+            if ('IteratorAggregate' === $interface) {
+                continue;
+            }
+            if (is_subclass_of($interface, 'IteratorAggregate')) {
                 continue;
             }
 
@@ -59,10 +63,8 @@ class TraversablePatch implements ClassPatchInterface
 
     /**
      * Forces class to implement Iterator interface.
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
         $node->addInterface('Iterator');
 
@@ -92,7 +94,7 @@ class TraversablePatch implements ClassPatchInterface
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 100;
     }

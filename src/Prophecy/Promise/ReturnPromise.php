@@ -21,16 +21,13 @@ use Prophecy\Prophecy\MethodProphecy;
  */
 class ReturnPromise implements PromiseInterface
 {
-    private $returnValues = array();
-
     /**
      * Initializes promise.
      *
      * @param array<mixed> $returnValues Array of values
      */
-    public function __construct(array $returnValues)
+    public function __construct(private array $returnValues)
     {
-        $this->returnValues = $returnValues;
     }
 
     public function execute(array $args, ObjectProphecy $object, MethodProphecy $method)

@@ -20,10 +20,7 @@ use phpDocumentor\Reflection\DocBlock\Tags\Method;
  */
 final class ClassAndInterfaceTagRetriever implements MethodTagRetrieverInterface
 {
-    /**
-     * @var MethodTagRetrieverInterface
-     */
-    private $classRetriever;
+    private \Prophecy\PhpDocumentor\MethodTagRetrieverInterface|\Prophecy\PhpDocumentor\ClassTagRetriever $classRetriever;
 
     public function __construct(?MethodTagRetrieverInterface $classRetriever = null)
     {
@@ -36,7 +33,7 @@ final class ClassAndInterfaceTagRetriever implements MethodTagRetrieverInterface
         $this->classRetriever = new ClassTagRetriever();
     }
 
-    public function getTagList(\ReflectionClass $reflectionClass)
+    public function getTagList(\ReflectionClass $reflectionClass): array
     {
         return array_merge(
             $this->classRetriever->getTagList($reflectionClass),
@@ -49,10 +46,10 @@ final class ClassAndInterfaceTagRetriever implements MethodTagRetrieverInterface
      *
      * @return list<Method>
      */
-    private function getInterfacesTagList(\ReflectionClass $reflectionClass)
+    private function getInterfacesTagList(\ReflectionClass $reflectionClass): array
     {
         $interfaces = $reflectionClass->getInterfaces();
-        $tagList = array();
+        $tagList = [];
 
         foreach ($interfaces as $interface) {
             $tagList = array_merge($tagList, $this->classRetriever->getTagList($interface));

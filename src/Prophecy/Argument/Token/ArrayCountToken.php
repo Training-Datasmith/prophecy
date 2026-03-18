@@ -19,14 +19,11 @@ namespace Prophecy\Argument\Token;
 
 class ArrayCountToken implements TokenInterface
 {
-    private $count;
-
     /**
-     * @param integer $value
+     * @param integer $count
      */
-    public function __construct($value)
+    public function __construct(private $count)
     {
-        $this->count = $value;
     }
 
     /**
@@ -36,27 +33,23 @@ class ArrayCountToken implements TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int|false
     {
         return $this->isCountable($argument) && $this->hasProperCount($argument) ? 6 : false;
     }
 
     /**
      * Returns false.
-     *
-     * @return boolean
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('count(%s)', $this->count);
     }
@@ -65,23 +58,20 @@ class ArrayCountToken implements TokenInterface
      * Returns true if object is either array or instance of \Countable
      *
      * @param mixed $argument
-     * @return bool
      *
      * @phpstan-assert-if-true array<mixed>|\Countable $argument
      */
-    private function isCountable($argument)
+    private function isCountable($argument): bool
     {
-        return (is_array($argument) || $argument instanceof \Countable);
+        return (is_countable($argument));
     }
 
     /**
      * Returns true if $argument has expected number of elements
      *
      * @param array<mixed>|\Countable $argument
-     *
-     * @return bool
      */
-    private function hasProperCount($argument)
+    private function hasProperCount(\Countable|array $argument): bool
     {
         return $this->count === count($argument);
     }

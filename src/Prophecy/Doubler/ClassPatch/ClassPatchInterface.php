@@ -25,7 +25,6 @@ interface ClassPatchInterface
     /**
      * Checks if patch supports specific class node.
      *
-     * @param ClassNode $node
      *
      * @return bool
      */
@@ -34,7 +33,6 @@ interface ClassPatchInterface
     /**
      * Applies patch to the specific class node.
      *
-     * @param ClassNode $node
      * @return void
      */
     public function apply(ClassNode $node);

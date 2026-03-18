@@ -18,21 +18,18 @@ namespace Prophecy\Argument\Token;
  */
 class StringContainsToken implements TokenInterface
 {
-    private $value;
-
     /**
      * Initializes token.
      *
      * @param string $value
      */
-    public function __construct($value)
+    public function __construct(private $value)
     {
-        $this->value = $value;
     }
 
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int|false
     {
-        return is_string($argument) && strpos($argument, $this->value) !== false ? 6 : false;
+        return is_string($argument) && str_contains($argument, $this->value) ? 6 : false;
     }
 
     /**
@@ -47,20 +44,16 @@ class StringContainsToken implements TokenInterface
 
     /**
      * Returns false.
-     *
-     * @return bool
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('contains("%s")', $this->value);
     }

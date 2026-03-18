@@ -23,11 +23,6 @@ class CallbackToken implements TokenInterface
     private $callback;
 
     /**
-     * @var string|null
-     */
-    private $customStringRepresentation;
-
-    /**
      * Initializes token.
      *
      * @param callable $callback
@@ -35,7 +30,7 @@ class CallbackToken implements TokenInterface
      *
      * @throws \Prophecy\Exception\InvalidArgumentException
      */
-    public function __construct($callback, ?string $customStringRepresentation = null)
+    public function __construct($callback, private readonly ?string $customStringRepresentation = null)
     {
         if (!is_callable($callback)) {
             throw new InvalidArgumentException(sprintf(
@@ -45,7 +40,6 @@ class CallbackToken implements TokenInterface
         }
 
         $this->callback = $callback;
-        $this->customStringRepresentation = $customStringRepresentation;
     }
 
     /**
@@ -55,27 +49,23 @@ class CallbackToken implements TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int|false
     {
         return call_user_func($this->callback, $argument) ? 7 : false;
     }
 
     /**
      * Returns false.
-     *
-     * @return bool
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->customStringRepresentation !== null) {
             return $this->customStringRepresentation;

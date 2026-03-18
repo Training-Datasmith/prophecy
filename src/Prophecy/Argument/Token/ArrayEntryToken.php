@@ -44,7 +44,7 @@ class ArrayEntryToken implements TokenInterface
      * @throws InvalidArgumentException
      * @return false|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): false|int
     {
         if ($argument instanceof \Traversable) {
             $argument = iterator_to_array($argument);
@@ -58,31 +58,25 @@ class ArrayEntryToken implements TokenInterface
             return false;
         }
 
-        $keyScores = array_map(array($this->key,'scoreArgument'), array_keys($argument));
-        $valueScores = array_map(array($this->value,'scoreArgument'), $argument);
-        $scoreEntry = static function ($value, $key) {
-            return $value && $key ? (int) min(8, ($key + $value) / 2) : false;
-        };
+        $keyScores = array_map($this->key->scoreArgument(...), array_keys($argument));
+        $valueScores = array_map($this->value->scoreArgument(...), $argument);
+        $scoreEntry = (static fn($value, $key) => $value && $key ? (int) min(8, ($key + $value) / 2) : false);
 
         return max(array_map($scoreEntry, $valueScores, $keyScores));
     }
 
     /**
      * Returns false.
-     *
-     * @return boolean
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('[..., %s => %s, ...]', $this->key, $this->value);
     }
@@ -111,9 +105,8 @@ class ArrayEntryToken implements TokenInterface
      * Wraps non token $value into ExactValueToken
      *
      * @param mixed $value
-     * @return TokenInterface
      */
-    private function wrapIntoExactValueToken($value)
+    private function wrapIntoExactValueToken($value): \Prophecy\Argument\Token\TokenInterface
     {
         return $value instanceof TokenInterface ? $value : new ExactValueToken($value);
     }
@@ -126,7 +119,7 @@ class ArrayEntryToken implements TokenInterface
      * @return array<mixed>
      * @throws InvalidArgumentException
      */
-    private function convertArrayAccessToEntry(\ArrayAccess $object)
+    private function convertArrayAccessToEntry(\ArrayAccess $object): array
     {
         if (!$this->key instanceof ExactValueToken) {
             throw new InvalidArgumentException(sprintf(
@@ -146,6 +139,6 @@ class ArrayEntryToken implements TokenInterface
             ));
         }
 
-        return $object->offsetExists($key) ? array($key => $object[$key]) : array();
+        return $object->offsetExists($key) ? [$key => $object[$key]] : [];
     }
 }

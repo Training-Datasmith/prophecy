@@ -22,10 +22,7 @@ use SebastianBergmann\Comparator\Factory as BaseFactory;
  */
 final class Factory extends BaseFactory
 {
-    /**
-     * @var Factory
-     */
-    private static $instance;
+    private static ?\Prophecy\Comparator\Factory $instance = null;
 
     public function __construct()
     {

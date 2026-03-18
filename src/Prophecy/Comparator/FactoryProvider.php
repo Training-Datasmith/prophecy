@@ -20,10 +20,7 @@ use SebastianBergmann\Comparator\Factory;
  */
 final class FactoryProvider
 {
-    /**
-     * @var Factory|null
-     */
-    private static $instance;
+    private static ?\SebastianBergmann\Comparator\Factory $instance = null;
 
     private function __construct() {}
 

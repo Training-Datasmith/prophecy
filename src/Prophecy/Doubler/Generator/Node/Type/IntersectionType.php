@@ -4,7 +4,7 @@ namespace Prophecy\Doubler\Generator\Node\Type;
 
 use Prophecy\Exception\Doubler\DoubleException;
 
-final class IntersectionType implements TypeInterface
+final readonly class IntersectionType implements TypeInterface
 {
     /**
      * @param list<ObjectType> $types
@@ -22,9 +22,6 @@ final class IntersectionType implements TypeInterface
         return $this->types;
     }
 
-    /**
-     * @param SimpleType $givenType
-     */
     private function has(SimpleType $givenType): bool
     {
         foreach ($this->types as $type) {

@@ -8,19 +8,14 @@ final class ReturnTypeNode extends TypeNodeAbstract
 {
     protected function isBuiltIn(string $type): bool
     {
-        switch ($type) {
-            case 'void':
-            case 'never':
-                return true;
-            default:
-                return parent::isBuiltIn($type);
-        }
+        return match ($type) {
+            'void', 'never' => true,
+            default => parent::isBuiltIn($type),
+        };
     }
 
     /**
      * @deprecated use hasReturnStatement
-     *
-     * @return bool
      */
     public function isVoid(): bool
     {

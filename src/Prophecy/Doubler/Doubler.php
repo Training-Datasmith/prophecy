@@ -26,19 +26,16 @@ use ReflectionClass;
  */
 class Doubler
 {
-    private $mirror;
-    private $creator;
-    private $namer;
+    private readonly \Prophecy\Doubler\Generator\ClassMirror $mirror;
+    private readonly \Prophecy\Doubler\Generator\ClassCreator $creator;
+    private readonly \Prophecy\Doubler\NameGenerator $namer;
 
     /**
      * @var list<ClassPatchInterface>
      */
-    private $patches = array();
+    private array $patches = [];
 
-    /**
-     * @var Instantiator|null
-     */
-    private $instantiator;
+    private ?\Doctrine\Instantiator\Instantiator $instantiator = null;
 
     public function __construct(?ClassMirror $mirror = null, ?ClassCreator $creator = null,
         ?NameGenerator $namer = null)
@@ -61,17 +58,13 @@ class Doubler
     /**
      * Registers new class patch.
      *
-     * @param ClassPatchInterface $patch
      *
-     * @return void
      */
-    public function registerClassPatch(ClassPatchInterface $patch)
+    public function registerClassPatch(ClassPatchInterface $patch): void
     {
         $this->patches[] = $patch;
 
-        @usort($this->patches, function (ClassPatchInterface $patch1, ClassPatchInterface $patch2) {
-            return $patch2->getPriority() - $patch1->getPriority();
-        });
+        @usort($this->patches, fn(ClassPatchInterface $patch1, ClassPatchInterface $patch2) => $patch2->getPriority() - $patch1->getPriority());
     }
 
     /**
@@ -94,7 +87,7 @@ class Doubler
                 throw new InvalidArgumentException(sprintf(
                     "[ReflectionClass \$interface1 [, ReflectionClass \$interface2]] array expected as\n"
                     ."a second argument to `Doubler::double(...)`, but got %s.",
-                    is_object($interface) ? get_class($interface).' class' : gettype($interface)
+                    is_object($interface) ? $interface::class.' class' : gettype($interface)
                 ));
             }
         }
@@ -127,7 +120,7 @@ class Doubler
      *
      * @return class-string<T&DoubleInterface>
      */
-    protected function createDoubleClass(?ReflectionClass $class, array $interfaces)
+    protected function createDoubleClass(?ReflectionClass $class, array $interfaces): string
     {
         $name = $this->namer->name($class, $interfaces);
         $node = $this->mirror->reflect($class, $interfaces);

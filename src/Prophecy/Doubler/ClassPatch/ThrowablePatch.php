@@ -9,20 +9,13 @@ class ThrowablePatch implements ClassPatchInterface
 {
     /**
      * Checks if patch supports specific class node.
-     *
-     * @param ClassNode $node
-     * @return bool
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         return $this->implementsAThrowableInterface($node) && $this->doesNotExtendAThrowableClass($node);
     }
 
-    /**
-     * @param ClassNode $node
-     * @return bool
-     */
-    private function implementsAThrowableInterface(ClassNode $node)
+    private function implementsAThrowableInterface(ClassNode $node): bool
     {
         foreach ($node->getInterfaces() as $type) {
             if (is_a($type, 'Throwable', true)) {
@@ -33,11 +26,7 @@ class ThrowablePatch implements ClassPatchInterface
         return false;
     }
 
-    /**
-     * @param ClassNode $node
-     * @return bool
-     */
-    private function doesNotExtendAThrowableClass(ClassNode $node)
+    private function doesNotExtendAThrowableClass(ClassNode $node): bool
     {
         return !is_a($node->getParentClass(), 'Throwable', true);
     }
@@ -45,11 +34,9 @@ class ThrowablePatch implements ClassPatchInterface
     /**
      * Applies patch to the specific class node.
      *
-     * @param ClassNode $node
      *
-     * @return void
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
         $this->checkItCanBeDoubled($node);
         $this->setParentClassToException($node);
@@ -88,7 +75,7 @@ class ThrowablePatch implements ClassPatchInterface
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 100;
     }

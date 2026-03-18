@@ -23,25 +23,21 @@ use Prophecy\Util\StringUtil;
  */
 class ObjectStateToken implements TokenInterface
 {
-    private $name;
-    private $value;
-    private $util;
-    private $comparatorFactory;
+    private readonly \Prophecy\Util\StringUtil $util;
+    private readonly \SebastianBergmann\Comparator\Factory $comparatorFactory;
 
     /**
      * Initializes token.
      *
-     * @param string $methodName
+     * @param string $name
      * @param mixed  $value             Expected return value
      */
     public function __construct(
-        $methodName,
-        $value,
+        private $name,
+        private $value,
         ?StringUtil $util = null,
         ?ComparatorFactory $comparatorFactory = null
     ) {
-        $this->name  = $methodName;
-        $this->value = $value;
         $this->util  = $util ?: new StringUtil();
 
         $this->comparatorFactory = $comparatorFactory ?: FactoryProvider::getInstance();
@@ -51,12 +47,10 @@ class ObjectStateToken implements TokenInterface
      * Scores 8 if argument is an object, which method returns expected value.
      *
      * @param mixed $argument
-     *
-     * @return bool|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int|false
     {
-        $methodCallable = array($argument, $this->name);
+        $methodCallable = [$argument, $this->name];
         if (is_object($argument) && method_exists($argument, $this->name) && is_callable($methodCallable)) {
             $actual = call_user_func($methodCallable);
 
@@ -67,7 +61,7 @@ class ObjectStateToken implements TokenInterface
             try {
                 $comparator->assertEquals($this->value, $actual);
                 return 8;
-            } catch (ComparisonFailure $failure) {
+            } catch (ComparisonFailure) {
                 return false;
             }
         }
@@ -81,20 +75,16 @@ class ObjectStateToken implements TokenInterface
 
     /**
      * Returns false.
-     *
-     * @return bool
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('state(%s(), %s)',
             $this->name,

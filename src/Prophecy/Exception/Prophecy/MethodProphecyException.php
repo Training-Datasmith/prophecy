@@ -15,7 +15,7 @@ use Prophecy\Prophecy\MethodProphecy;
 
 class MethodProphecyException extends ObjectProphecyException
 {
-    private $methodProphecy;
+    private readonly \Prophecy\Prophecy\MethodProphecy $methodProphecy;
 
     /**
      * @param string $message

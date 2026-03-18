@@ -20,14 +20,11 @@ use Prophecy\Call\Call;
  */
 class StringUtil
 {
-    private $verbose;
-
     /**
      * @param bool $verbose
      */
-    public function __construct($verbose = true)
+    public function __construct(private $verbose = true)
     {
-        $this->verbose = $verbose;
     }
 
     /**
@@ -42,21 +39,19 @@ class StringUtil
     {
         if (\is_array($value)) {
             if (range(0, count($value) - 1) === array_keys($value)) {
-                return '['.implode(', ', array_map(array($this, __FUNCTION__), $value)).']';
+                return '['.implode(', ', array_map([$this, __FUNCTION__], $value)).']';
             }
 
-            $stringify = array($this, __FUNCTION__);
+            $stringify = [$this, __FUNCTION__];
 
-            return '['.implode(', ', array_map(function ($item, $key) use ($stringify) {
-                return (is_integer($key) ? $key : '"'.$key.'"')
-                    .' => '.call_user_func($stringify, $item);
-            }, $value, array_keys($value))).']';
+            return '['.implode(', ', array_map(fn($item, int|string $key) => (is_integer($key) ? $key : '"'.$key.'"')
+                .' => '.call_user_func($stringify, $item), $value, array_keys($value))).']';
         }
         if (\is_resource($value)) {
             return get_resource_type($value).':'.$value;
         }
         if (\is_object($value)) {
-            return $exportObject ? ExportUtil::export($value) : sprintf('%s#%s', get_class($value), spl_object_id($value));
+            return $exportObject ? ExportUtil::export($value) : sprintf('%s#%s', $value::class, spl_object_id($value));
         }
         if (\is_bool($value)) {
             return $value ? 'true' : 'false';
@@ -83,19 +78,15 @@ class StringUtil
      * Stringifies provided array of calls.
      *
      * @param Call[] $calls Array of Call instances
-     *
-     * @return string
      */
-    public function stringifyCalls(array $calls)
+    public function stringifyCalls(array $calls): string
     {
         $self = $this;
 
-        return implode(PHP_EOL, array_map(function (Call $call) use ($self) {
-            return sprintf('  - %s(%s) @ %s',
-                $call->getMethodName(),
-                implode(', ', array_map(array($self, 'stringify'), $call->getArguments())),
-                str_replace(GETCWD().DIRECTORY_SEPARATOR, '', $call->getCallPlace())
-            );
-        }, $calls));
+        return implode(PHP_EOL, array_map(fn(Call $call) => sprintf('  - %s(%s) @ %s',
+            $call->getMethodName(),
+            implode(', ', array_map($self->stringify(...), $call->getArguments())),
+            str_replace(GETCWD().DIRECTORY_SEPARATOR, '', $call->getCallPlace())
+        ), $calls));
     }
 }

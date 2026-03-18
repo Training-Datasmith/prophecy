@@ -30,29 +30,24 @@ use Prophecy\Exception\Prediction\PredictionException;
  */
 class ObjectProphecy implements ProphecyInterface
 {
-    /**
-     * @var LazyDouble<T>
-     */
-    private $lazyDouble;
-    private $callCenter;
-    private $revealer;
-    private $comparatorFactory;
+    private readonly \Prophecy\Call\CallCenter $callCenter;
+    private readonly \Prophecy\Prophecy\RevealerInterface $revealer;
+    private readonly \SebastianBergmann\Comparator\Factory $comparatorFactory;
 
     /**
      * @var array<string, list<MethodProphecy>>
      */
-    private $methodProphecies = array();
+    private array $methodProphecies = [];
 
     /**
      * @param LazyDouble<T> $lazyDouble
      */
     public function __construct(
-        LazyDouble $lazyDouble,
+        private readonly LazyDouble $lazyDouble,
         ?CallCenter $callCenter = null,
         ?RevealerInterface $revealer = null,
         ?ComparatorFactory $comparatorFactory = null
     ) {
-        $this->lazyDouble = $lazyDouble;
         $this->callCenter = $callCenter ?: new CallCenter();
         $this->revealer   = $revealer ?: new Revealer();
 
@@ -70,7 +65,7 @@ class ObjectProphecy implements ProphecyInterface
      * @phpstan-param class-string<U> $class
      * @phpstan-this-out static<T&U>
      */
-    public function willExtend($class)
+    public function willExtend($class): static
     {
         $this->lazyDouble->setParentClass($class);
 
@@ -88,7 +83,7 @@ class ObjectProphecy implements ProphecyInterface
      * @phpstan-param class-string<U> $interface
      * @phpstan-this-out static<T&U>
      */
-    public function willImplement($interface)
+    public function willImplement($interface): static
     {
         $this->lazyDouble->addInterface($interface);
 
@@ -102,7 +97,7 @@ class ObjectProphecy implements ProphecyInterface
      *
      * @return $this
      */
-    public function willBeConstructedWith(?array $arguments = null)
+    public function willBeConstructedWith(?array $arguments = null): static
     {
         $this->lazyDouble->setArguments($arguments);
 
@@ -138,11 +133,9 @@ class ObjectProphecy implements ProphecyInterface
     /**
      * Adds method prophecy to object prophecy.
      *
-     * @param MethodProphecy $methodProphecy
      *
-     * @return void
      */
-    public function addMethodProphecy(MethodProphecy $methodProphecy)
+    public function addMethodProphecy(MethodProphecy $methodProphecy): void
     {
         $methodName = strtolower($methodProphecy->getMethodName());
 
@@ -198,11 +191,10 @@ class ObjectProphecy implements ProphecyInterface
      * Finds calls by method name & arguments wildcard.
      *
      * @param string            $methodName
-     * @param ArgumentsWildcard $wildcard
      *
      * @return list<Call>
      */
-    public function findProphecyMethodCalls($methodName, ArgumentsWildcard $wildcard)
+    public function findProphecyMethodCalls($methodName, ArgumentsWildcard $wildcard): array
     {
         return $this->callCenter->findCalls($methodName, $wildcard);
     }
@@ -210,14 +202,13 @@ class ObjectProphecy implements ProphecyInterface
     /**
      * Checks that registered method predictions do not fail.
      *
-     * @return void
      *
      * @throws \Prophecy\Exception\Prediction\AggregateException If any of registered predictions fail
      * @throws \Prophecy\Exception\Call\UnexpectedCallException
      */
-    public function checkProphecyMethodsPredictions()
+    public function checkProphecyMethodsPredictions(): void
     {
-        $exception = new AggregateException(sprintf("%s:\n", get_class($this->reveal())));
+        $exception = new AggregateException(sprintf("%s:\n", $this->reveal()::class));
         $exception->setObjectProphecy($this);
 
         $this->callCenter->checkUnexpectedCalls();
@@ -240,12 +231,10 @@ class ObjectProphecy implements ProphecyInterface
     /**
      * Creates new method prophecy using specified method name and arguments.
      *
-     * @param string $methodName
      * @param array<mixed> $arguments
-     *
      * @return MethodProphecy
      */
-    public function __call($methodName, array $arguments)
+    public function __call(string $methodName, array $arguments)
     {
         $arguments = $this->revealer->reveal($arguments);
         \assert(\is_array($arguments));
@@ -260,7 +249,7 @@ class ObjectProphecy implements ProphecyInterface
             try {
                 $comparator->assertEquals($argumentsWildcard, $arguments);
                 return $prophecy;
-            } catch (ComparisonFailure $failure) {
+            } catch (ComparisonFailure) {
             }
         }
 
@@ -270,11 +259,9 @@ class ObjectProphecy implements ProphecyInterface
     /**
      * Tries to get property value from double.
      *
-     * @param string $name
      *
-     * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name): mixed
     {
         return $this->reveal()->$name;
     }
@@ -282,12 +269,10 @@ class ObjectProphecy implements ProphecyInterface
     /**
      * Tries to set property value to double.
      *
-     * @param string $name
-     * @param mixed  $value
      *
      * @return void
      */
-    public function __set($name, $value)
+    public function __set(string $name, mixed $value)
     {
         $this->reveal()->$name = $this->revealer->reveal($value);
     }

@@ -24,26 +24,22 @@ class ReflectionClassNewInstancePatch implements ClassPatchInterface
     /**
      * Supports ReflectionClass
      *
-     * @param ClassNode $node
      *
-     * @return bool
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         return 'ReflectionClass' === $node->getParentClass();
     }
 
     /**
      * Updates newInstance's first argument to make it optional
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
         $method = $node->getMethod('newInstance');
         \assert($method !== null);
         foreach ($method->getArguments() as $argument) {
-            $argument->setDefault(null);
+            $argument->setDefault();
         }
     }
 
@@ -52,7 +48,7 @@ class ReflectionClassNewInstancePatch implements ClassPatchInterface
      *
      * @return int Priority number (higher = earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 50;
     }

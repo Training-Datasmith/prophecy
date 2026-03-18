@@ -26,27 +26,25 @@ use ReflectionClass;
  */
 class LazyDouble
 {
-    private $doubler;
     /**
      * @var ReflectionClass<T>|null
      */
-    private $class;
+    private ?\ReflectionClass $class = null;
     /**
      * @var list<ReflectionClass<object>>
      */
-    private $interfaces = array();
+    private array $interfaces = [];
     /**
      * @var array<mixed>|null
      */
-    private $arguments  = null;
+    private ?array $arguments  = null;
     /**
      * @var (T&DoubleInterface)|null
      */
     private $double;
 
-    public function __construct(Doubler $doubler)
+    public function __construct(private readonly Doubler $doubler)
     {
-        $this->doubler = $doubler;
     }
 
     /**
@@ -54,7 +52,6 @@ class LazyDouble
      *
      * @param class-string|ReflectionClass<object> $class
      *
-     * @return void
      *
      * @template U of object
      * @phpstan-param class-string<U>|ReflectionClass<U> $class
@@ -63,7 +60,7 @@ class LazyDouble
      * @throws ClassNotFoundException
      * @throws DoubleException
      */
-    public function setParentClass($class)
+    public function setParentClass($class): void
     {
         if (null !== $this->double) {
             throw new DoubleException('Can not extend class with already instantiated double.');
@@ -87,7 +84,6 @@ class LazyDouble
      *
      * @param class-string|ReflectionClass<object> $interface
      *
-     * @return void
      *
      * @template U of object
      * @phpstan-param class-string<U>|ReflectionClass<U> $interface
@@ -96,7 +92,7 @@ class LazyDouble
      * @throws InterfaceNotFoundException
      * @throws DoubleException
      */
-    public function addInterface($interface)
+    public function addInterface($interface): void
     {
         if (null !== $this->double) {
             throw new DoubleException(
@@ -122,10 +118,8 @@ class LazyDouble
      * Sets constructor arguments.
      *
      * @param array<mixed>|null $arguments
-     *
-     * @return void
      */
-    public function setArguments(?array $arguments = null)
+    public function setArguments(?array $arguments = null): void
     {
         $this->arguments = $arguments;
     }

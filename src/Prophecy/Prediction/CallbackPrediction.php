@@ -43,7 +43,7 @@ class CallbackPrediction implements PredictionInterface
         $this->callback = $callback;
     }
 
-    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method)
+    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method): void
     {
         $callback = $this->callback;
 

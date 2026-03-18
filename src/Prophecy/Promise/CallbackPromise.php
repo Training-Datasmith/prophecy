@@ -45,7 +45,7 @@ class CallbackPromise implements PromiseInterface
         $this->callback = $callback;
     }
 
-    public function execute(array $args, ObjectProphecy $object, MethodProphecy $method)
+    public function execute(array $args, ObjectProphecy $object, MethodProphecy $method): mixed
     {
         $callback = $this->callback;
 

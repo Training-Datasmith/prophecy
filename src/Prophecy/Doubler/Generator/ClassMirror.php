@@ -37,7 +37,7 @@ use ReflectionUnionType;
  */
 class ClassMirror
 {
-    private const REFLECTABLE_METHODS = array(
+    private const REFLECTABLE_METHODS = [
         '__construct',
         '__destruct',
         '__sleep',
@@ -45,7 +45,7 @@ class ClassMirror
         '__toString',
         '__call',
         '__invoke',
-    );
+    ];
 
     /**
      * Reflects provided arguments into class node.
@@ -53,10 +53,9 @@ class ClassMirror
      * @param ReflectionClass<object>|null $class
      * @param ReflectionClass<object>[]    $interfaces
      *
-     * @return Node\ClassNode
      *
      */
-    public function reflect(?ReflectionClass $class, array $interfaces)
+    public function reflect(?ReflectionClass $class, array $interfaces): \Prophecy\Doubler\Generator\Node\ClassNode
     {
         $node = new Node\ClassNode();
 
@@ -77,7 +76,7 @@ class ClassMirror
                 throw new InvalidArgumentException(sprintf(
                     "[ReflectionClass \$interface1 [, ReflectionClass \$interface2]] array expected as\n"
                     ."a second argument to `ClassMirror::reflect(...)`, but got %s.",
-                    is_object($interface) ? get_class($interface).' class' : gettype($interface)
+                    is_object($interface) ? $interface::class.' class' : gettype($interface)
                 ));
             }
             if (false === $interface->isInterface()) {
@@ -91,7 +90,7 @@ class ClassMirror
             $this->reflectInterfaceToNode($interface, $node);
         }
 
-        $node->addInterface('Prophecy\Doubler\Generator\ReflectionInterface');
+        $node->addInterface(\Prophecy\Doubler\Generator\ReflectionInterface::class);
 
         return $node;
     }
@@ -122,7 +121,7 @@ class ClassMirror
         }
 
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (0 === strpos($method->getName(), '_')
+            if (str_starts_with($method->getName(), '_')
                 && !in_array($method->getName(), self::REFLECTABLE_METHODS)) {
                 continue;
             }
@@ -191,8 +190,6 @@ class ClassMirror
 
     /**
      * @param ReflectionClass<object> $declaringClass
-     *
-     * @return void
      */
     private function reflectArgumentToNode(ReflectionParameter $parameter, ReflectionClass $declaringClass, Node\MethodNode $methodNode): void
     {
@@ -305,7 +302,7 @@ class ClassMirror
         }
 
         // Unknown ReflectionType implementation
-        throw new ClassMirrorException('Unknown reflection type: '.get_class($type), $declaringClass);
+        throw new ClassMirrorException('Unknown reflection type: '.$type::class, $declaringClass);
     }
 
     /**

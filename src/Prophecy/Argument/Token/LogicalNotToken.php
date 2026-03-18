@@ -18,8 +18,7 @@ namespace Prophecy\Argument\Token;
  */
 class LogicalNotToken implements TokenInterface
 {
-    /** @var TokenInterface */
-    private $token;
+    private readonly \Prophecy\Argument\Token\TokenInterface $token;
 
     /**
      * @param mixed $value exact value or token
@@ -36,7 +35,7 @@ class LogicalNotToken implements TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int|false
     {
         return false === $this->token->scoreArgument($argument) ? 4 : false;
     }
@@ -63,10 +62,8 @@ class LogicalNotToken implements TokenInterface
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('not(%s)', $this->token);
     }

@@ -25,23 +25,20 @@ class SplFileInfoPatch implements ClassPatchInterface
     /**
      * Supports everything that extends SplFileInfo.
      *
-     * @param ClassNode $node
      *
-     * @return bool
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
-        return 'SplFileInfo' === $node->getParentClass()
-            || is_subclass_of($node->getParentClass(), 'SplFileInfo')
-        ;
+        if ('SplFileInfo' === $node->getParentClass()) {
+            return true;
+        }
+        return is_subclass_of($node->getParentClass(), 'SplFileInfo');
     }
 
     /**
      * Updated constructor code to call parent one with dummy file argument.
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
         if ($node->hasMethod('__construct')) {
             $constructor = $node->getMethod('__construct');
@@ -79,16 +76,12 @@ class SplFileInfoPatch implements ClassPatchInterface
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 50;
     }
 
-    /**
-     * @param ClassNode $node
-     * @return boolean
-     */
-    private function nodeIsDirectoryIterator(ClassNode $node)
+    private function nodeIsDirectoryIterator(ClassNode $node): bool
     {
         $parent = $node->getParentClass();
 
@@ -96,11 +89,7 @@ class SplFileInfoPatch implements ClassPatchInterface
             || is_subclass_of($parent, 'DirectoryIterator');
     }
 
-    /**
-     * @param ClassNode $node
-     * @return boolean
-     */
-    private function nodeIsSplFileObject(ClassNode $node)
+    private function nodeIsSplFileObject(ClassNode $node): bool
     {
         $parent = $node->getParentClass();
 
@@ -108,14 +97,10 @@ class SplFileInfoPatch implements ClassPatchInterface
             || is_subclass_of($parent, 'SplFileObject');
     }
 
-    /**
-     * @param ClassNode $node
-     * @return boolean
-     */
-    private function nodeIsSymfonySplFileInfo(ClassNode $node)
+    private function nodeIsSymfonySplFileInfo(ClassNode $node): bool
     {
         $parent = $node->getParentClass();
 
-        return 'Symfony\\Component\\Finder\\SplFileInfo' === $parent;
+        return \Symfony\Component\Finder\SplFileInfo::class === $parent;
     }
 }

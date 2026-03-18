@@ -16,16 +16,13 @@ namespace Prophecy\Argument;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class ArgumentsWildcard
+class ArgumentsWildcard implements \Stringable
 {
     /**
      * @var list<Token\TokenInterface>
      */
-    private $tokens = array();
-    /**
-     * @var string|null
-     */
-    private $string;
+    private array $tokens = [];
+    private ?string $string = null;
 
     /**
      * Initializes wildcard.
@@ -50,7 +47,7 @@ class ArgumentsWildcard
      *
      * @return false|int False OR integer score (higher - better)
      */
-    public function scoreArguments(array $arguments)
+    public function scoreArguments(array $arguments): false|int|float
     {
         if (0 == count($arguments) && 0 == count($this->tokens)) {
             return 1;
@@ -59,7 +56,7 @@ class ArgumentsWildcard
         $arguments  = array_values($arguments);
         $totalScore = 0;
         foreach ($this->tokens as $i => $token) {
-            $argument = isset($arguments[$i]) ? $arguments[$i] : null;
+            $argument = $arguments[$i] ?? null;
             if (1 >= $score = $token->scoreArgument($argument)) {
                 return false;
             }
@@ -80,15 +77,11 @@ class ArgumentsWildcard
 
     /**
      * Returns string representation for wildcard.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (null === $this->string) {
-            $this->string = implode(', ', array_map(function ($token) {
-                return (string) $token;
-            }, $this->tokens));
+            $this->string = implode(', ', array_map(fn(\Prophecy\Argument\Token\TokenInterface $token) => (string) $token, $this->tokens));
         }
 
         return $this->string;

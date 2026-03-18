@@ -18,23 +18,18 @@ namespace Prophecy\Argument\Token;
  */
 class ApproximateValueToken implements TokenInterface
 {
-    private $value;
-    private $precision;
-
     /**
      * @param float $value
      * @param int $precision
      */
-    public function __construct($value, $precision = 0)
+    public function __construct(private $value, private $precision = 0)
     {
-        $this->value = $value;
-        $this->precision = $precision;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): false|int
     {
         if (!\is_float($argument) && !\is_int($argument) && !\is_numeric($argument)) {
             return false;
@@ -46,17 +41,15 @@ class ApproximateValueToken implements TokenInterface
     /**
      * {@inheritdoc}
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('≅%s', round($this->value, $this->precision));
     }

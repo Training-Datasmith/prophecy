@@ -31,7 +31,7 @@ final class ClassTagRetriever implements MethodTagRetrieverInterface
         $this->contextFactory = new ContextFactory();
     }
 
-    public function getTagList(\ReflectionClass $reflectionClass)
+    public function getTagList(\ReflectionClass $reflectionClass): array
     {
         try {
             $phpdoc = $this->docBlockFactory->create(
@@ -39,7 +39,7 @@ final class ClassTagRetriever implements MethodTagRetrieverInterface
                 $this->contextFactory->createFromReflector($reflectionClass)
             );
 
-            $methods = array();
+            $methods = [];
 
             foreach ($phpdoc->getTagsByName('method') as $tag) {
                 if ($tag instanceof Method) {
@@ -48,8 +48,8 @@ final class ClassTagRetriever implements MethodTagRetrieverInterface
             }
 
             return $methods;
-        } catch (\InvalidArgumentException $e) {
-            return array();
+        } catch (\InvalidArgumentException) {
+            return [];
         }
     }
 }

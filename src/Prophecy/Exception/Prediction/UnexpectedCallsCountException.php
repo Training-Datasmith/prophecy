@@ -16,11 +16,10 @@ use Prophecy\Prophecy\MethodProphecy;
 
 class UnexpectedCallsCountException extends UnexpectedCallsException
 {
-    private $expectedCount;
+    private readonly int $expectedCount;
 
     /**
      * @param string         $message
-     * @param MethodProphecy $methodProphecy
      * @param int            $count
      * @param array<Call>     $calls
      */

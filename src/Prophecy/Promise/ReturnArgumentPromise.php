@@ -22,10 +22,7 @@ use Prophecy\Prophecy\MethodProphecy;
  */
 class ReturnArgumentPromise implements PromiseInterface
 {
-    /**
-     * @var int
-     */
-    private $index;
+    private readonly int $index;
 
     /**
      * Initializes callback promise.

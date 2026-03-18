@@ -31,17 +31,14 @@ use Prophecy\Exception\Prediction\AggregateException;
  */
 class Prophet
 {
-    /**
-     * @var Doubler
-     */
-    private $doubler;
-    private $revealer;
-    private $util;
+    private readonly ?\Prophecy\Doubler\Doubler $doubler;
+    private readonly \Prophecy\Prophecy\RevealerInterface $revealer;
+    private readonly \Prophecy\Util\StringUtil $util;
 
     /**
      * @var list<ObjectProphecy<object>>
      */
-    private $prophecies = array();
+    private array $prophecies = [];
 
     public function __construct(
         ?Doubler $doubler = null,
@@ -125,11 +122,10 @@ class Prophet
     /**
      * Checks all predictions defined by prophecies of this Prophet.
      *
-     * @return void
      *
      * @throws Exception\Prediction\AggregateException If any prediction fails
      */
-    public function checkPredictions()
+    public function checkPredictions(): void
     {
         $exception = new AggregateException("Some predictions failed:\n");
         foreach ($this->prophecies as $prophecy) {

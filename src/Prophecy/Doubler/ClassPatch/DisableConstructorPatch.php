@@ -28,21 +28,17 @@ class DisableConstructorPatch implements ClassPatchInterface
     /**
      * Checks if class has `__construct` method.
      *
-     * @param ClassNode $node
      *
-     * @return bool
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         return true;
     }
 
     /**
      * Makes all class constructor arguments optional.
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
         if (!$node->isExtendable('__construct')) {
             return;
@@ -57,7 +53,7 @@ class DisableConstructorPatch implements ClassPatchInterface
         $constructor = $node->getMethod('__construct');
         \assert($constructor !== null);
         foreach ($constructor->getArguments() as $argument) {
-            $argument->setDefault(null);
+            $argument->setDefault();
 
             $type = $argument->getTypeNode()->getType();
             if (
@@ -100,7 +96,7 @@ PHP
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 100;
     }

@@ -23,14 +23,14 @@ use Prophecy\Exception\Prediction\UnexpectedCallsException;
  */
 class NoCallsPrediction implements PredictionInterface
 {
-    private $util;
+    private readonly \Prophecy\Util\StringUtil $util;
 
     public function __construct(?StringUtil $util = null)
     {
         $this->util = $util ?: new StringUtil();
     }
 
-    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method)
+    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method): void
     {
         if (!count($calls)) {
             return;
@@ -42,7 +42,7 @@ class NoCallsPrediction implements PredictionInterface
             "No calls expected that match:\n"
             ."  %s->%s(%s)\n"
             ."but %d %s made:\n%s",
-            get_class($object->reveal()),
+            $object->reveal()::class,
             $method->getMethodName(),
             $method->getArgumentsWildcard(),
             count($calls),

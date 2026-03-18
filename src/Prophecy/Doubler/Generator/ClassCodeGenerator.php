@@ -21,18 +21,13 @@ use Prophecy\Doubler\Generator\Node\TypeNodeAbstract;
  */
 class ClassCodeGenerator
 {
-    // Used to accept an optional first argument with the deprecated Prophecy\Doubler\Generator\TypeHintReference so careful when adding a new argument in a minor version.
-    public function __construct() {}
-
     /**
      * Generates PHP code for class node.
      *
      * @param string         $classname
-     * @param Node\ClassNode $class
      *
-     * @return string
      */
-    public function generate($classname, Node\ClassNode $class)
+    public function generate($classname, Node\ClassNode $class): string
     {
         $parts     = explode('\\', $classname);
         $classname = array_pop($parts);
@@ -43,7 +38,7 @@ class ClassCodeGenerator
             $classname,
             $class->getParentClass(),
             implode(', ',
-                array_map(function ($interface) {return '\\'.$interface;}, $class->getInterfaces())
+                array_map(fn(string $interface) => '\\'.$interface, $class->getInterfaces())
             )
         );
 
@@ -91,7 +86,7 @@ class ClassCodeGenerator
      */
     private function generateArguments(array $arguments): array
     {
-        return array_map(function (Node\ArgumentNode $argument) {
+        return array_map(function (Node\ArgumentNode $argument): string {
 
             $php = $this->generateTypes($argument->getTypeNode());
 
@@ -105,7 +100,7 @@ class ClassCodeGenerator
                 $default = var_export($argument->getDefault(), true);
 
                 // This is necessary for PHP 8.1, as enum cases are exported without a leading slash in this version
-                if ($argument->getDefault() instanceof \UnitEnum && 0 !== strpos($default, '\\')) {
+                if ($argument->getDefault() instanceof \UnitEnum && !str_starts_with($default, '\\')) {
                     $default = '\\'.$default;
                 }
 

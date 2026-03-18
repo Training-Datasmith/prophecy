@@ -29,7 +29,6 @@ interface PredictionInterface
      *
      * @param Call[]        $calls
      * @param ObjectProphecy<object> $object
-     * @param MethodProphecy $method
      *
      * @throws PredictionException
      * @return void

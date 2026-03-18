@@ -4,21 +4,14 @@ namespace Prophecy\Exception\Doubler;
 
 class MethodNotExtendableException extends DoubleException
 {
-    private $methodName;
-
-    private $className;
-
     /**
      * @param string $message
      * @param string $className
      * @param string $methodName
      */
-    public function __construct($message, $className, $methodName)
+    public function __construct($message, private $className, private $methodName)
     {
         parent::__construct($message);
-
-        $this->methodName = $methodName;
-        $this->className = $className;
     }
 
 

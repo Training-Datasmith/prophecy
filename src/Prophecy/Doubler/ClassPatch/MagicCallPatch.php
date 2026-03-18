@@ -28,35 +28,26 @@ class MagicCallPatch implements ClassPatchInterface
 {
     const MAGIC_METHODS_WITH_ARGUMENTS = ['__call', '__callStatic', '__get', '__isset', '__set', '__set_state', '__unserialize', '__unset'];
 
-    private $tagRetriever;
-
-    public function __construct(?MethodTagRetrieverInterface $tagRetriever = null)
+    public function __construct(private readonly ?MethodTagRetrieverInterface $tagRetriever = new ClassAndInterfaceTagRetriever())
     {
-        $this->tagRetriever = null === $tagRetriever ? new ClassAndInterfaceTagRetriever() : $tagRetriever;
     }
 
     /**
      * Support any class
      *
-     * @param ClassNode $node
      *
-     * @return boolean
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         return true;
     }
 
     /**
      * Discover Magical API
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
-        $types = array_filter($node->getInterfaces(), function ($interface) {
-            return 0 !== strpos($interface, 'Prophecy\\');
-        });
+        $types = array_filter($node->getInterfaces(), fn(string $interface) => !str_starts_with($interface, 'Prophecy\\'));
         $types[] = $node->getParentClass();
 
         foreach ($types as $type) {
@@ -107,7 +98,7 @@ class MagicCallPatch implements ClassPatchInterface
      *
      * @return integer Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 50;
     }

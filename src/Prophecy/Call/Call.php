@@ -21,22 +21,15 @@ use Prophecy\Argument\ArgumentsWildcard;
  */
 class Call
 {
-    private $methodName;
-    private $arguments;
-    private $returnValue;
-    private $exception;
     /**
      * @var string|null
      */
     private $file;
-    /**
-     * @var int|null
-     */
-    private $line;
+    private ?int $line = null;
     /**
      * @var \SplObjectStorage<ArgumentsWildcard, int|false>
      */
-    private $scores;
+    private \SplObjectStorage $scores;
 
     /**
      * Initializes call.
@@ -44,17 +37,12 @@ class Call
      * @param string      $methodName
      * @param array<mixed> $arguments
      * @param mixed       $returnValue
-     * @param Exception|null $exception
      * @param null|string $file
      * @param null|int    $line
      */
-    public function __construct($methodName, array $arguments, $returnValue,
-        ?Exception $exception, $file, $line)
+    public function __construct(private $methodName, private readonly array $arguments, private $returnValue,
+        private readonly ?Exception $exception, $file, $line)
     {
-        $this->methodName  = $methodName;
-        $this->arguments   = $arguments;
-        $this->returnValue = $returnValue;
-        $this->exception   = $exception;
         $this->scores      = new \SplObjectStorage();
 
         if ($file) {
@@ -125,10 +113,8 @@ class Call
 
     /**
      * Returns short notation for callee place.
-     *
-     * @return string
      */
-    public function getCallPlace()
+    public function getCallPlace(): string
     {
         if (null === $this->file) {
             return 'unknown';
@@ -140,12 +126,10 @@ class Call
     /**
      * Adds the wildcard match score for the provided wildcard.
      *
-     * @param ArgumentsWildcard $wildcard
      * @param false|int $score
-     *
      * @return $this
      */
-    public function addScore(ArgumentsWildcard $wildcard, $score)
+    public function addScore(ArgumentsWildcard $wildcard, $score): static
     {
         $this->scores[$wildcard] = $score;
 
@@ -156,16 +140,11 @@ class Call
      * Returns wildcard match score for the provided wildcard. The score is
      * calculated if not already done.
      *
-     * @param ArgumentsWildcard $wildcard
      *
      * @return false|int False OR integer score (higher - better)
      */
     public function getScore(ArgumentsWildcard $wildcard)
     {
-        if (isset($this->scores[$wildcard])) {
-            return $this->scores[$wildcard];
-        }
-
-        return $this->scores[$wildcard] = $wildcard->scoreArguments($this->getArguments());
+        return $this->scores[$wildcard] ?? $this->scores[$wildcard] = $wildcard->scoreArguments($this->getArguments());
     }
 }

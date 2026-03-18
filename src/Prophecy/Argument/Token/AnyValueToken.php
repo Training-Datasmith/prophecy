@@ -22,30 +22,24 @@ class AnyValueToken implements TokenInterface
      * Always scores 3 for any argument.
      *
      * @param mixed $argument
-     *
-     * @return int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int
     {
         return 3;
     }
 
     /**
      * Returns false.
-     *
-     * @return bool
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return '*';
     }

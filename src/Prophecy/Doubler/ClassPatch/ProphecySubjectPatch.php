@@ -28,23 +28,19 @@ class ProphecySubjectPatch implements ClassPatchInterface
     /**
      * Always returns true.
      *
-     * @param ClassNode $node
      *
-     * @return bool
      */
-    public function supports(ClassNode $node)
+    public function supports(ClassNode $node): bool
     {
         return true;
     }
 
     /**
      * Apply Prophecy functionality to class node.
-     *
-     * @param ClassNode $node
      */
-    public function apply(ClassNode $node)
+    public function apply(ClassNode $node): void
     {
-        $node->addInterface('Prophecy\Prophecy\ProphecySubjectInterface');
+        $node->addInterface(\Prophecy\Prophecy\ProphecySubjectInterface::class);
         $node->addProperty('objectProphecyClosure', 'private');
 
         foreach ($node->getMethods() as $name => $method) {
@@ -65,7 +61,7 @@ class ProphecySubjectPatch implements ClassPatchInterface
 
         $prophecySetter = new MethodNode('setProphecy');
         $prophecyArgument = new ArgumentNode('prophecy');
-        $prophecyArgument->setTypeNode(new ArgumentTypeNode(new ObjectType('Prophecy\Prophecy\ProphecyInterface')));
+        $prophecyArgument->setTypeNode(new ArgumentTypeNode(new ObjectType(\Prophecy\Prophecy\ProphecyInterface::class)));
         $prophecySetter->addArgument($prophecyArgument);
         $prophecySetter->setCode(<<<PHP
 if (null === \$this->objectProphecyClosure) {
@@ -107,7 +103,7 @@ PHP
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 0;
     }

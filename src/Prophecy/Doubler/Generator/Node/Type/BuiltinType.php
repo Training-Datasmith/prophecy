@@ -2,9 +2,9 @@
 
 namespace Prophecy\Doubler\Generator\Node\Type;
 
-final class BuiltinType implements SimpleType
+final readonly class BuiltinType implements SimpleType
 {
-    public function __construct(private readonly string $type) {}
+    public function __construct(private string $type) {}
 
     public function __toString(): string
     {

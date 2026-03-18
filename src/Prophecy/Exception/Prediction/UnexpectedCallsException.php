@@ -18,11 +18,10 @@ use Prophecy\Exception\Prophecy\MethodProphecyException;
 class UnexpectedCallsException extends MethodProphecyException implements PredictionException
 {
     /** @var list<Call> */
-    private $calls;
+    private readonly array $calls;
 
     /**
      * @param string         $message
-     * @param MethodProphecy $methodProphecy
      * @param array<Call>     $calls
      */
     public function __construct($message, MethodProphecy $methodProphecy, array $calls)

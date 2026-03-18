@@ -26,14 +26,14 @@ use Prophecy\Exception\Prediction\NoCallsException;
  */
 class CallPrediction implements PredictionInterface
 {
-    private $util;
+    private readonly \Prophecy\Util\StringUtil $util;
 
     public function __construct(?StringUtil $util = null)
     {
         $this->util = $util ?: new StringUtil();
     }
 
-    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method)
+    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method): void
     {
         if (count($calls)) {
             return;
@@ -41,7 +41,7 @@ class CallPrediction implements PredictionInterface
 
         $methodCalls = $object->findProphecyMethodCalls(
             $method->getMethodName(),
-            new ArgumentsWildcard(array(new AnyValuesToken()))
+            new ArgumentsWildcard([new AnyValuesToken()])
         );
 
         if (count($methodCalls)) {
@@ -51,7 +51,7 @@ class CallPrediction implements PredictionInterface
                 ."but expected at least one.\n"
                 ."Recorded `%s(...)` calls:\n%s",
 
-                get_class($object->reveal()),
+                $object->reveal()::class,
                 $method->getMethodName(),
                 $method->getArgumentsWildcard(),
                 $method->getMethodName(),
@@ -64,7 +64,7 @@ class CallPrediction implements PredictionInterface
             ."  %s->%s(%s)\n"
             ."but expected at least one.",
 
-            get_class($object->reveal()),
+            $object->reveal()::class,
             $method->getMethodName(),
             $method->getArgumentsWildcard()
         ), $method);

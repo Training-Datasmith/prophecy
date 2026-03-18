@@ -17,22 +17,10 @@ final class TypeHintReference
      */
     public function isBuiltInParamTypeHint($type)
     {
-        switch ($type) {
-            case 'self':
-            case 'array':
-            case 'callable':
-            case 'bool':
-            case 'float':
-            case 'int':
-            case 'string':
-            case 'iterable':
-            case 'object':
-            case 'mixed':
-                return true;
-
-            default:
-                return false;
-        }
+        return match ($type) {
+            'self', 'array', 'callable', 'bool', 'float', 'int', 'string', 'iterable', 'object', 'mixed' => true,
+            default => false,
+        };
     }
 
     /**

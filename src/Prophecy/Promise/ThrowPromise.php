@@ -26,10 +26,7 @@ class ThrowPromise implements PromiseInterface
 {
     private $exception;
 
-    /**
-     * @var Instantiator|null
-     */
-    private $instantiator;
+    private ?\Doctrine\Instantiator\Instantiator $instantiator = null;
 
     /**
      * Initializes promise.
@@ -52,14 +49,14 @@ class ThrowPromise implements PromiseInterface
         } elseif (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             throw new InvalidArgumentException(sprintf(
                 'Exception / Throwable class or instance expected as argument to ThrowPromise, but got %s.',
-                is_object($exception) ? get_class($exception) : gettype($exception)
+                get_debug_type($exception)
             ));
         }
 
         $this->exception = $exception;
     }
 
-    public function execute(array $args, ObjectProphecy $object, MethodProphecy $method)
+    public function execute(array $args, ObjectProphecy $object, MethodProphecy $method): void
     {
         if (is_string($this->exception)) {
             $classname   = $this->exception;
@@ -80,12 +77,7 @@ class ThrowPromise implements PromiseInterface
         throw $this->exception;
     }
 
-    /**
-     * @param string $exception
-     *
-     * @return bool
-     */
-    private function isAValidThrowable($exception)
+    private function isAValidThrowable(string $exception): bool
     {
         return is_a($exception, 'Exception', true)
             || is_a($exception, 'Throwable', true);

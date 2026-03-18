@@ -20,40 +20,27 @@ use Prophecy\Exception\InvalidArgumentException;
  */
 class MethodNode
 {
-    private $name;
-    private $code;
     /**
-     * @var string
-     *
      * @phpstan-var 'public'|'private'|'protected'
      */
-    private $visibility = 'public';
-    /**
-     * @var bool
-     */
-    private $static = false;
-    /**
-     * @var bool
-     */
-    private $returnsReference = false;
+    private string $visibility = 'public';
+    private bool $static = false;
+    private bool $returnsReference = false;
 
-    /** @var ReturnTypeNode */
-    private $returnTypeNode;
+    private \Prophecy\Doubler\Generator\Node\ReturnTypeNode $returnTypeNode;
 
     /**
      * @var list<ArgumentNode>
      */
-    private $arguments = array();
+    private array $arguments = [];
 
     // Used to accept an optional third argument with the deprecated Prophecy\Doubler\Generator\TypeHintReference so careful when adding a new argument in a minor version.
     /**
      * @param string      $name
      * @param string|null $code
      */
-    public function __construct($name, $code = null)
+    public function __construct(private $name, private $code = null)
     {
-        $this->name = $name;
-        $this->code = $code;
         $this->returnTypeNode = new ReturnTypeNode();
     }
 
@@ -69,14 +56,12 @@ class MethodNode
 
     /**
      * @param string $visibility
-     *
-     * @return void
      */
-    public function setVisibility($visibility)
+    public function setVisibility($visibility): void
     {
         $visibility = strtolower($visibility);
 
-        if (!\in_array($visibility, array('public', 'private', 'protected'), true)) {
+        if (!\in_array($visibility, ['public', 'private', 'protected'], true)) {
             throw new InvalidArgumentException(sprintf(
                 '`%s` method visibility is not supported.', $visibility
             ));
@@ -95,10 +80,8 @@ class MethodNode
 
     /**
      * @param bool $static
-     *
-     * @return void
      */
-    public function setStatic($static = true)
+    public function setStatic($static = true): void
     {
         $this->static = (bool) $static;
     }
@@ -111,10 +94,7 @@ class MethodNode
         return $this->returnsReference;
     }
 
-    /**
-     * @return void
-     */
-    public function setReturnsReference()
+    public function setReturnsReference(): void
     {
         $this->returnsReference = true;
     }
@@ -127,10 +107,7 @@ class MethodNode
         return $this->name;
     }
 
-    /**
-     * @return void
-     */
-    public function addArgument(ArgumentNode $argument)
+    public function addArgument(ArgumentNode $argument): void
     {
         $this->arguments[] = $argument;
     }
@@ -145,9 +122,8 @@ class MethodNode
 
     /**
      * @deprecated use getReturnTypeNode instead
-     * @return bool
      */
-    public function hasReturnType()
+    public function hasReturnType(): bool
     {
         return (bool) $this->returnTypeNode->getNonNullTypes();
     }
@@ -160,10 +136,8 @@ class MethodNode
     /**
      * @deprecated use setReturnTypeNode instead
      * @param string $type
-     *
-     * @return void
      */
-    public function setReturnType($type = null)
+    public function setReturnType($type = null): void
     {
         $this->returnTypeNode = ($type === '' || $type === null) ? new ReturnTypeNode() : new ReturnTypeNode($type);
     }
@@ -171,10 +145,8 @@ class MethodNode
     /**
      * @deprecated use setReturnTypeNode instead
      * @param bool $bool
-     *
-     * @return void
      */
-    public function setNullableReturnType($bool = true)
+    public function setNullableReturnType($bool = true): void
     {
         if ($bool) {
             $this->returnTypeNode = new ReturnTypeNode('null', ...$this->returnTypeNode->getTypes());
@@ -203,27 +175,21 @@ class MethodNode
 
     /**
      * @deprecated use getReturnTypeNode instead
-     * @return bool
      */
-    public function hasNullableReturnType()
+    public function hasNullableReturnType(): bool
     {
         return $this->returnTypeNode->isNullable();
     }
 
     /**
      * @param string $code
-     *
-     * @return void
      */
-    public function setCode($code)
+    public function setCode($code): void
     {
         $this->code = $code;
     }
 
-    /**
-     * @return string
-     */
-    public function getCode()
+    public function getCode(): string
     {
         if ($this->returnsReference) {
             return "throw new \Prophecy\Exception\Doubler\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), '{$this->name}');";
@@ -232,27 +198,21 @@ class MethodNode
         return (string) $this->code;
     }
 
-    /**
-     * @return void
-     */
-    public function useParentCode()
+    public function useParentCode(): void
     {
         $this->code = sprintf(
             'return parent::%s(%s);', $this->getName(), implode(', ',
-                array_map(array($this, 'generateArgument'), $this->arguments)
+                array_map($this->generateArgument(...), $this->arguments)
             )
         );
     }
 
-    /**
-     * @return string
-     */
-    private function generateArgument(ArgumentNode $arg)
+    private function generateArgument(ArgumentNode $arg): string
     {
         $argument = '$'.$arg->getName();
 
         if ($arg->isVariadic()) {
-            $argument = '...'.$argument;
+            return '...'.$argument;
         }
 
         return $argument;

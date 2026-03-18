@@ -22,30 +22,24 @@ class AnyValuesToken implements TokenInterface
      * Always scores 2 for any argument.
      *
      * @param $argument
-     *
-     * @return int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): int
     {
         return 2;
     }
 
     /**
      * Returns true to stop wildcard from processing other tokens.
-     *
-     * @return bool
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return true;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return '* [, ...]';
     }

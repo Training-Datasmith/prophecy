@@ -16,33 +16,14 @@ use Prophecy\Argument\ArgumentsWildcard;
 class MethodNotFoundException extends DoubleException
 {
     /**
-     * @var string|object
-     */
-    private $classname;
-
-    /**
-     * @var string
-     */
-    private $methodName;
-
-    /**
-     * @var null|ArgumentsWildcard|array<mixed>
-     */
-    private $arguments;
-
-    /**
      * @param string $message
      * @param string|object $classname
      * @param string $methodName
      * @param null|ArgumentsWildcard|array<mixed> $arguments
      */
-    public function __construct($message, $classname, $methodName, $arguments = null)
+    public function __construct($message, private $classname, private $methodName, private $arguments = null)
     {
         parent::__construct($message);
-
-        $this->classname  = $classname;
-        $this->methodName = $methodName;
-        $this->arguments = $arguments;
     }
 
     /**

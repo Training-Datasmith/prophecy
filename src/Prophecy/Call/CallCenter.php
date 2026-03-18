@@ -26,17 +26,17 @@ use SplObjectStorage;
  */
 class CallCenter
 {
-    private $util;
+    private readonly \Prophecy\Util\StringUtil $util;
 
     /**
      * @var Call[]
      */
-    private $recordedCalls = array();
+    private array $recordedCalls = [];
 
     /**
      * @var SplObjectStorage<Call, ObjectProphecy<object>>
      */
-    private $unexpectedCalls;
+    private \SplObjectStorage $unexpectedCalls;
 
     /**
      * Initializes call center.
@@ -91,7 +91,7 @@ class CallCenter
         }
 
         // Sort matches by their score value
-        @usort($matches, function ($match1, $match2) { return $match2[0] - $match1[0]; });
+        @usort($matches, fn(array $match1, array $match2) => $match2[0] - $match1[0]);
 
         $score = $matches[0][0];
         // If Highest rated method prophecy has a promise - execute it or return null instead
@@ -129,28 +129,23 @@ class CallCenter
      * Searches for calls by method name & arguments wildcard.
      *
      * @param string            $methodName
-     * @param ArgumentsWildcard $wildcard
      *
      * @return list<Call>
      */
-    public function findCalls($methodName, ArgumentsWildcard $wildcard)
+    public function findCalls($methodName, ArgumentsWildcard $wildcard): array
     {
         $methodName = strtolower($methodName);
 
         return array_values(
-            array_filter($this->recordedCalls, function (Call $call) use ($methodName, $wildcard) {
-                return $methodName === strtolower($call->getMethodName())
-                    && 0 < $call->getScore($wildcard)
-                ;
-            })
+            array_filter($this->recordedCalls, fn(Call $call) => $methodName === strtolower($call->getMethodName())
+                && 0 < $call->getScore($wildcard))
         );
     }
 
     /**
-     * @return void
      * @throws UnexpectedCallException
      */
-    public function checkUnexpectedCalls()
+    public function checkUnexpectedCalls(): void
     {
         foreach ($this->unexpectedCalls as $call) {
             $prophecy = $this->unexpectedCalls[$call];
@@ -166,23 +161,21 @@ class CallCenter
      * @param ObjectProphecy<object> $prophecy
      * @param string                 $methodName
      * @param array<mixed>           $arguments
-     *
-     * @return UnexpectedCallException
      */
     private function createUnexpectedCallException(ObjectProphecy $prophecy, $methodName,
-        array $arguments)
+        array $arguments): \Prophecy\Exception\Call\UnexpectedCallException
     {
-        $classname = get_class($prophecy->reveal());
+        $classname = $prophecy->reveal()::class;
         $indentationLength = 8; // looks good
         $argstring = implode(
             ",\n",
             $this->indentArguments(
-                array_map(array($this->util, 'stringify'), $arguments),
+                array_map($this->util->stringify(...), $arguments),
                 $indentationLength
             )
         );
 
-        $expected = array();
+        $expected = [];
 
         foreach (array_merge(...array_values($prophecy->getMethodProphecies())) as $methodProphecy) {
             $expected[] = sprintf(
@@ -193,7 +186,7 @@ class CallCenter
                 implode(
                     ",\n",
                     $this->indentArguments(
-                        array_map('strval', $methodProphecy->getArgumentsWildcard()->getTokens()),
+                        array_map(strval(...), $methodProphecy->getArgumentsWildcard()->getTokens()),
                         $indentationLength
                     )
                 )
@@ -218,17 +211,14 @@ class CallCenter
 
     /**
      * @param string[] $arguments
-     * @param int      $indentationLength
      *
      * @return string[]
      */
-    private function indentArguments(array $arguments, $indentationLength)
+    private function indentArguments(array $arguments, int $indentationLength): array
     {
         return preg_replace_callback(
             '/^/m',
-            function () use ($indentationLength) {
-                return str_repeat(' ', $indentationLength);
-            },
+            fn() => str_repeat(' ', $indentationLength),
             $arguments
         );
     }
@@ -238,16 +228,15 @@ class CallCenter
      * @param string $methodName
      * @param array<mixed> $arguments
      *
-     * @return array
      *
      * @phpstan-return list<array{int, MethodProphecy}>
      */
-    private function findMethodProphecies(ObjectProphecy $prophecy, $methodName, array $arguments)
+    private function findMethodProphecies(ObjectProphecy $prophecy, $methodName, array $arguments): array
     {
-        $matches = array();
+        $matches = [];
         foreach ($prophecy->getMethodProphecies($methodName) as $methodProphecy) {
             if (0 < $score = $methodProphecy->getArgumentsWildcard()->scoreArguments($arguments)) {
-                $matches[] = array($score, $methodProphecy);
+                $matches[] = [$score, $methodProphecy];
             }
         }
 

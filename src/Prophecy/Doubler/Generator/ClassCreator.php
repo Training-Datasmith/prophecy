@@ -21,7 +21,7 @@ use Prophecy\Exception\Doubler\ClassCreatorException;
  */
 class ClassCreator
 {
-    private $generator;
+    private readonly \Prophecy\Doubler\Generator\ClassCodeGenerator $generator;
 
     public function __construct(?ClassCodeGenerator $generator = null)
     {
@@ -32,10 +32,8 @@ class ClassCreator
      * Creates class.
      *
      * @param string         $classname
-     * @param Node\ClassNode $class
      *
      * @return mixed
-     *
      * @throws \Prophecy\Exception\Doubler\ClassCreatorException
      */
     public function create($classname, Node\ClassNode $class)

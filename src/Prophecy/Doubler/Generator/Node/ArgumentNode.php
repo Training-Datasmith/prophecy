@@ -18,15 +18,11 @@ namespace Prophecy\Doubler\Generator\Node;
  */
 class ArgumentNode
 {
-    private $name;
     /**
      * @var mixed
      */
     private $default;
-    /**
-     * @var bool
-     */
-    private $optional    = false;
+    private bool $optional    = false;
 
     /**
      * @var bool
@@ -38,15 +34,13 @@ class ArgumentNode
      */
     private $isVariadic  = false;
 
-    /** @var ArgumentTypeNode */
-    private $typeNode;
+    private \Prophecy\Doubler\Generator\Node\ArgumentTypeNode $typeNode;
 
     /**
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct(private $name)
     {
-        $this->name = $name;
         $this->typeNode = new ArgumentTypeNode();
     }
 
@@ -58,10 +52,7 @@ class ArgumentNode
         return $this->name;
     }
 
-    /**
-     * @return void
-     */
-    public function setTypeNode(ArgumentTypeNode $typeNode)
+    public function setTypeNode(ArgumentTypeNode $typeNode): void
     {
         $this->typeNode = $typeNode;
     }
@@ -71,10 +62,7 @@ class ArgumentNode
         return $this->typeNode;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDefault()
+    public function hasDefault(): bool
     {
         return $this->isOptional() && !$this->isVariadic();
     }
@@ -89,10 +77,8 @@ class ArgumentNode
 
     /**
      * @param mixed $default
-     *
-     * @return void
      */
-    public function setDefault($default = null)
+    public function setDefault($default = null): void
     {
         $this->optional = true;
         $this->default  = $default;
@@ -108,10 +94,8 @@ class ArgumentNode
 
     /**
      * @param bool $byReference
-     *
-     * @return void
      */
-    public function setAsPassedByReference($byReference = true)
+    public function setAsPassedByReference($byReference = true): void
     {
         $this->byReference = $byReference;
     }
@@ -126,10 +110,8 @@ class ArgumentNode
 
     /**
      * @param bool $isVariadic
-     *
-     * @return void
      */
-    public function setAsVariadic($isVariadic = true)
+    public function setAsVariadic($isVariadic = true): void
     {
         $this->isVariadic = $isVariadic;
     }
@@ -144,9 +126,8 @@ class ArgumentNode
 
     /**
      * @deprecated use getArgumentTypeNode instead
-     * @return string|null
      */
-    public function getTypeHint()
+    public function getTypeHint(): ?string
     {
         $type = $this->typeNode->getNonNullTypes() ? $this->typeNode->getNonNullTypes()[0] : null;
 
@@ -156,19 +137,16 @@ class ArgumentNode
     /**
      * @deprecated use setArgumentTypeNode instead
      * @param string|null $typeHint
-     *
-     * @return void
      */
-    public function setTypeHint($typeHint = null)
+    public function setTypeHint($typeHint = null): void
     {
         $this->typeNode = ($typeHint === null) ? new ArgumentTypeNode() : new ArgumentTypeNode($typeHint);
     }
 
     /**
      * @deprecated use getArgumentTypeNode instead
-     * @return bool
      */
-    public function isNullable()
+    public function isNullable(): bool
     {
         return $this->typeNode->canUseNullShorthand();
     }
@@ -176,10 +154,8 @@ class ArgumentNode
     /**
      * @deprecated use getArgumentTypeNode instead
      * @param bool $isNullable
-     *
-     * @return void
      */
-    public function setAsNullable($isNullable = true)
+    public function setAsNullable($isNullable = true): void
     {
         $nonNullTypes = $this->typeNode->getNonNullTypes();
         $this->typeNode = $isNullable ? new ArgumentTypeNode('null', ...$nonNullTypes) : new ArgumentTypeNode(...$nonNullTypes);

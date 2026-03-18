@@ -18,27 +18,20 @@ namespace Prophecy\Argument\Token;
  */
 class NotInArrayToken implements TokenInterface
 {
-    private $token = array();
-    private $strict;
-
     /**
-     * @param array<mixed> $arguments tokens
+     * @param array<mixed> $token tokens
      * @param bool $strict
      */
-    public function __construct(array $arguments, $strict = true)
+    public function __construct(private readonly array $token, private $strict = true)
     {
-        $this->token = $arguments;
-        $this->strict = $strict;
     }
 
     /**
      * Return scores 8 score if argument is in array.
      *
      * @param $argument
-     *
-     * @return bool|int
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): false|int
     {
         if (count($this->token) === 0) {
             return false;
@@ -53,20 +46,16 @@ class NotInArrayToken implements TokenInterface
 
     /**
      * Returns false.
-     *
-     * @return boolean
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $arrayAsString = implode(', ', $this->token);
         return "[{$arrayAsString}]";

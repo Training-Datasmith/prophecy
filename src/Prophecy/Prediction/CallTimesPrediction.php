@@ -25,8 +25,8 @@ use Prophecy\Exception\Prediction\UnexpectedCallsCountException;
  */
 class CallTimesPrediction implements PredictionInterface
 {
-    private $times;
-    private $util;
+    private readonly int $times;
+    private readonly \Prophecy\Util\StringUtil $util;
 
     /**
      * @param int        $times
@@ -37,7 +37,7 @@ class CallTimesPrediction implements PredictionInterface
         $this->util  = $util ?: new StringUtil();
     }
 
-    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method)
+    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method): void
     {
         if ($this->times == count($calls)) {
             return;
@@ -45,7 +45,7 @@ class CallTimesPrediction implements PredictionInterface
 
         $methodCalls = $object->findProphecyMethodCalls(
             $method->getMethodName(),
-            new ArgumentsWildcard(array(new AnyValuesToken()))
+            new ArgumentsWildcard([new AnyValuesToken()])
         );
 
         if (count($calls)) {
@@ -55,7 +55,7 @@ class CallTimesPrediction implements PredictionInterface
                 ."but %d were made:\n%s",
 
                 $this->times,
-                get_class($object->reveal()),
+                $object->reveal()::class,
                 $method->getMethodName(),
                 $method->getArgumentsWildcard(),
                 count($calls),
@@ -69,7 +69,7 @@ class CallTimesPrediction implements PredictionInterface
                 ."Recorded `%s(...)` calls:\n%s",
 
                 $this->times,
-                get_class($object->reveal()),
+                $object->reveal()::class,
                 $method->getMethodName(),
                 $method->getArgumentsWildcard(),
                 $method->getMethodName(),
@@ -82,7 +82,7 @@ class CallTimesPrediction implements PredictionInterface
                 ."but none were made.",
 
                 $this->times,
-                get_class($object->reveal()),
+                $object->reveal()::class,
                 $method->getMethodName(),
                 $method->getArgumentsWildcard()
             );

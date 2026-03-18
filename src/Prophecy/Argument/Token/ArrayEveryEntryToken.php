@@ -18,10 +18,7 @@ namespace Prophecy\Argument\Token;
  */
 class ArrayEveryEntryToken implements TokenInterface
 {
-    /**
-     * @var TokenInterface
-     */
-    private $value;
+    private readonly \Prophecy\Argument\Token\TokenInterface $value;
 
     /**
      * @param mixed $value exact value or token
@@ -38,14 +35,14 @@ class ArrayEveryEntryToken implements TokenInterface
     /**
      * {@inheritdoc}
      */
-    public function scoreArgument($argument)
+    public function scoreArgument($argument): false|int|float
     {
         if (!$argument instanceof \Traversable && !is_array($argument)) {
             return false;
         }
 
-        $scores = array();
-        foreach ($argument as $key => $argumentEntry) {
+        $scores = [];
+        foreach ($argument as $argumentEntry) {
             $scores[] = $this->value->scoreArgument($argumentEntry);
         }
 
@@ -59,7 +56,7 @@ class ArrayEveryEntryToken implements TokenInterface
     /**
      * {@inheritdoc}
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
@@ -67,7 +64,7 @@ class ArrayEveryEntryToken implements TokenInterface
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('[%s, ..., %s]', $this->value, $this->value);
     }

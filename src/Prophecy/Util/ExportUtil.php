@@ -48,20 +48,20 @@ class ExportUtil
      * @param  mixed $value
      * @return array<mixed>
      */
-    public static function toArray($value)
+    public static function toArray($value): array
     {
         if (!is_object($value)) {
             return (array) $value;
         }
 
-        $array = array();
+        $array = [];
 
         foreach ((array) $value as $key => $val) {
             // properties are transformed to keys in the following way:
             // private   $property => "\0Classname\0property"
             // protected $property => "\0*\0property"
             // public    $property => "property"
-            if (preg_match('/^\0.+\0(.+)$/', $key, $matches)) {
+            if (preg_match('/^\0.+\0(.+)$/', (string) $key, $matches)) {
                 $key = $matches[1];
             }
 
@@ -77,12 +77,12 @@ class ExportUtil
         // above (fast) mechanism nor with reflection in Zend.
         // Format the output similarly to print_r() in this case
         if ($value instanceof \SplObjectStorage) {
-            foreach ($value as $key => $val) {
+            foreach ($value as $val) {
                 // Use the same identifier that would be printed alongside the object's representation elsewhere.
-                $array[spl_object_id($val)] = array(
+                $array[spl_object_id($val)] = [
                     'obj' => $val,
                     'inf' => $value->getInfo(),
-                );
+                ];
             }
         }
 
@@ -95,10 +95,9 @@ class ExportUtil
      * @param  mixed                                       $value       The value to export
      * @param  int                                         $indentation The indentation level of the 2nd+ line
      * @param  \SebastianBergmann\RecursionContext\Context $processed   Previously processed objects
-     * @return string
      * @see    SebastianBergmann\Exporter\Exporter::export
      */
-    protected static function recursiveExport(&$value, $indentation, $processed = null)
+    protected static function recursiveExport(&$value, $indentation, $processed = null): string
     {
         if ($value === null) {
             return 'null';
@@ -131,7 +130,7 @@ class ExportUtil
             }
 
             return "'"
-            .str_replace(array("\r\n", "\n\r", "\r"), array("\n", "\n", "\n"), $value)
+            .str_replace(["\r\n", "\n\r", "\r"], ["\n", "\n", "\n"], $value)
             ."'";
         }
 
@@ -167,7 +166,7 @@ class ExportUtil
         }
 
         if (is_object($value)) {
-            $class = get_class($value);
+            $class = $value::class;
 
             if ($processed->contains($value)) {
                 return sprintf('%s#%d Object', $class, spl_object_id($value));

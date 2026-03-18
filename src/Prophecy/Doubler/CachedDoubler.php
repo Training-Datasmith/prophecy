@@ -24,27 +24,22 @@ class CachedDoubler extends Doubler
     /**
      * @var array<string, class-string>
      */
-    private static $classes = array();
+    private static array $classes = [];
 
     protected function createDoubleClass(?ReflectionClass $class, array $interfaces)
     {
         $classId = $this->generateClassId($class, $interfaces);
-        if (isset(self::$classes[$classId])) {
-            return self::$classes[$classId];
-        }
 
-        return self::$classes[$classId] = parent::createDoubleClass($class, $interfaces);
+        return self::$classes[$classId] ?? self::$classes[$classId] = parent::createDoubleClass($class, $interfaces);
     }
 
     /**
      * @param ReflectionClass<object>|null $class
      * @param ReflectionClass<object>[]    $interfaces
-     *
-     * @return string
      */
-    private function generateClassId(?ReflectionClass $class, array $interfaces)
+    private function generateClassId(?ReflectionClass $class, array $interfaces): string
     {
-        $parts = array();
+        $parts = [];
         if (null !== $class) {
             $parts[] = $class->getName();
         }
@@ -52,18 +47,15 @@ class CachedDoubler extends Doubler
             $parts[] = $interface->getName();
         }
         foreach ($this->getClassPatches() as $patch) {
-            $parts[] = get_class($patch);
+            $parts[] = $patch::class;
         }
         sort($parts);
 
         return md5(implode('', $parts));
     }
 
-    /**
-     * @return void
-     */
-    public function resetCache()
+    public function resetCache(): void
     {
-        self::$classes = array();
+        self::$classes = [];
     }
 }

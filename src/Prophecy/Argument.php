@@ -24,10 +24,8 @@ class Argument
      * Checks that argument is exact value or object.
      *
      * @param mixed $value
-     *
-     * @return Token\ExactValueToken
      */
-    public static function exact($value)
+    public static function exact($value): \Prophecy\Argument\Token\ExactValueToken
     {
         return new Token\ExactValueToken($value);
     }
@@ -36,10 +34,8 @@ class Argument
      * Checks that argument is of specific type or instance of specific class.
      *
      * @param string $type Type name (`integer`, `string`) or full class name
-     *
-     * @return Token\TypeToken
      */
-    public static function type($type)
+    public static function type($type): \Prophecy\Argument\Token\TypeToken
     {
         return new Token\TypeToken($type);
     }
@@ -49,10 +45,8 @@ class Argument
      *
      * @param string $methodName
      * @param mixed  $value
-     *
-     * @return Token\ObjectStateToken
      */
-    public static function which($methodName, $value)
+    public static function which($methodName, $value): \Prophecy\Argument\Token\ObjectStateToken
     {
         return new Token\ObjectStateToken($methodName, $value);
     }
@@ -62,30 +56,24 @@ class Argument
      *
      * @param callable $callback
      * @param string|null $customStringRepresentation Customize the __toString() representation of this token
-     *
-     * @return Token\CallbackToken
      */
-    public static function that($callback, ?string $customStringRepresentation = null)
+    public static function that($callback, ?string $customStringRepresentation = null): \Prophecy\Argument\Token\CallbackToken
     {
         return new Token\CallbackToken($callback, $customStringRepresentation);
     }
 
     /**
      * Matches any single value.
-     *
-     * @return Token\AnyValueToken
      */
-    public static function any()
+    public static function any(): \Prophecy\Argument\Token\AnyValueToken
     {
         return new Token\AnyValueToken();
     }
 
     /**
      * Matches all values to the rest of the signature.
-     *
-     * @return Token\AnyValuesToken
      */
-    public static function cetera()
+    public static function cetera(): \Prophecy\Argument\Token\AnyValuesToken
     {
         return new Token\AnyValuesToken();
     }
@@ -94,10 +82,8 @@ class Argument
      * Checks that argument matches all tokens
      *
      * @param mixed ...$tokens a list of tokens
-     *
-     * @return Token\LogicalAndToken
      */
-    public static function allOf(...$tokens)
+    public static function allOf(...$tokens): \Prophecy\Argument\Token\LogicalAndToken
     {
         return new Token\LogicalAndToken($tokens);
     }
@@ -106,10 +92,8 @@ class Argument
      * Checks that argument array or countable object has exact number of elements.
      *
      * @param integer $value array elements count
-     *
-     * @return Token\ArrayCountToken
      */
-    public static function size($value)
+    public static function size($value): \Prophecy\Argument\Token\ArrayCountToken
     {
         return new Token\ArrayCountToken($value);
     }
@@ -119,10 +103,8 @@ class Argument
      *
      * @param mixed $key   exact value or token
      * @param mixed $value exact value or token
-     *
-     * @return Token\ArrayEntryToken
      */
-    public static function withEntry($key, $value)
+    public static function withEntry($key, $value): \Prophecy\Argument\Token\ArrayEntryToken
     {
         return new Token\ArrayEntryToken($key, $value);
     }
@@ -131,10 +113,8 @@ class Argument
      * Checks that arguments array entries all match value
      *
      * @param mixed $value
-     *
-     * @return Token\ArrayEveryEntryToken
      */
-    public static function withEveryEntry($value)
+    public static function withEveryEntry($value): \Prophecy\Argument\Token\ArrayEveryEntryToken
     {
         return new Token\ArrayEveryEntryToken($value);
     }
@@ -143,10 +123,8 @@ class Argument
      * Checks that argument array contains value
      *
      * @param mixed $value
-     *
-     * @return Token\ArrayEntryToken
      */
-    public static function containing($value)
+    public static function containing($value): \Prophecy\Argument\Token\ArrayEntryToken
     {
         return new Token\ArrayEntryToken(self::any(), $value);
     }
@@ -155,10 +133,8 @@ class Argument
      * Checks that argument array has key
      *
      * @param mixed $key exact value or token
-     *
-     * @return Token\ArrayEntryToken
      */
-    public static function withKey($key)
+    public static function withKey($key): \Prophecy\Argument\Token\ArrayEntryToken
     {
         return new Token\ArrayEntryToken($key, self::any());
     }
@@ -167,20 +143,16 @@ class Argument
      * Checks that argument does not match the value|token.
      *
      * @param mixed $value either exact value or argument token
-     *
-     * @return Token\LogicalNotToken
      */
-    public static function not($value)
+    public static function not($value): \Prophecy\Argument\Token\LogicalNotToken
     {
         return new Token\LogicalNotToken($value);
     }
 
     /**
      * @param string $value
-     *
-     * @return Token\StringContainsToken
      */
-    public static function containingString($value)
+    public static function containingString($value): \Prophecy\Argument\Token\StringContainsToken
     {
         return new Token\StringContainsToken($value);
     }
@@ -189,10 +161,8 @@ class Argument
      * Checks that argument is identical value.
      *
      * @param mixed $value
-     *
-     * @return Token\IdenticalValueToken
      */
-    public static function is($value)
+    public static function is($value): \Prophecy\Argument\Token\IdenticalValueToken
     {
         return new Token\IdenticalValueToken($value);
     }
@@ -203,10 +173,8 @@ class Argument
      *
      * @param float $value
      * @param int $precision
-     *
-     * @return Token\ApproximateValueToken
      */
-    public static function approximate($value, $precision = 0)
+    public static function approximate($value, $precision = 0): \Prophecy\Argument\Token\ApproximateValueToken
     {
         return new Token\ApproximateValueToken($value, $precision);
     }
@@ -215,11 +183,8 @@ class Argument
      * Checks that argument is in array.
      *
      * @param array<mixed> $value
-     *
-     * @return Token\InArrayToken
      */
-
-    public static function in($value)
+    public static function in($value): \Prophecy\Argument\Token\InArrayToken
     {
         return new Token\InArrayToken($value);
     }
@@ -228,11 +193,8 @@ class Argument
      * Checks that argument is not in array.
      *
      * @param array<mixed> $value
-     *
-     * @return Token\NotInArrayToken
      */
-
-    public static function notIn($value)
+    public static function notIn($value): \Prophecy\Argument\Token\NotInArrayToken
     {
         return new Token\NotInArrayToken($value);
     }

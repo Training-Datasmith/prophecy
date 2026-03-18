@@ -21,7 +21,7 @@ class LogicalAndToken implements TokenInterface
     /**
      * @var list<TokenInterface>
      */
-    private $tokens = array();
+    private array $tokens = [];
 
     /**
      * @param array<mixed> $arguments exact values or tokens
@@ -63,20 +63,16 @@ class LogicalAndToken implements TokenInterface
 
     /**
      * Returns false.
-     *
-     * @return boolean
      */
-    public function isLast()
+    public function isLast(): bool
     {
         return false;
     }
 
     /**
      * Returns string representation for token.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('bool(%s)', implode(' AND ', $this->tokens));
     }

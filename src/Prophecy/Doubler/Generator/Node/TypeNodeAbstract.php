@@ -15,9 +15,6 @@ abstract class TypeNodeAbstract
     // null means no type, NOT BuiltInType("null")
     private ?TypeInterface $type;
 
-    /**
-     * @param string|TypeInterface|null $type
-     */
     public function __construct(string|TypeInterface|null $type = null, string ...$types)
     {
         if (!empty($types) || is_string($type)) {
@@ -122,7 +119,7 @@ abstract class TypeNodeAbstract
         }
 
         $types =  array_values($types);
-        $types = array_map([$this, 'normalizeBuiltinType'], $types);
+        $types = array_map($this->normalizeBuiltinType(...), $types);
 
         return array_values(array_unique($types));
     }
@@ -172,51 +169,21 @@ abstract class TypeNodeAbstract
 
     private function normalizeBuiltinType(string $type): string
     {
-        switch ($type) {
-            // normalize alias types
-            case 'double':
-            case 'real':
-                return 'float';
-            case 'integer':
-                return 'int';
-            case 'boolean':
-                return 'bool';
-            default:
-                return $type;
-        }
+        return match ($type) {
+            'double', 'real' => 'float',
+            'integer' => 'int',
+            'boolean' => 'bool',
+            default => $type,
+        };
     }
 
     protected function isBuiltIn(string $type): bool
     {
-        switch ($type) {
-            // type aliases
-            case 'double':
-            case 'real':
-            case 'boolean':
-            case 'integer':
-
-                //  built in types
-            case 'self':
-            case 'static':
-            case 'array':
-            case 'callable':
-            case 'bool':
-            case 'false':
-            case 'true':
-            case 'float':
-            case 'int':
-            case 'string':
-            case 'iterable':
-            case 'object':
-            case 'null':
-            case 'mixed':
-            case 'void':
-            case 'never':
-                return true;
-            default:
-                // Class / Interface type
-                return false;
-        }
+        return match ($type) {
+            'double', 'real', 'boolean', 'integer', 'self', 'static', 'array', 'callable', 'bool', 'false', 'true', 'float', 'int', 'string', 'iterable', 'object', 'null', 'mixed', 'void', 'never' => true,
+            // Class / Interface type
+            default => false,
+        };
     }
 
     protected function removePrefixNsSeparator(string $type): string
