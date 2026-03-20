@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Argument\Token;
 
 /**
@@ -18,8 +16,7 @@ namespace Prophecy\Argument\Token;
  *
  * @author Boris Mikhaylov <kaguxmail@gmail.com>
  */
-
-class ArrayCountToken implements TokenInterface
+class Array_Count_Token implements Token_Interface
 {
     /**
      * @param integer $count
@@ -27,7 +24,6 @@ class ArrayCountToken implements TokenInterface
     public function __construct(private $count)
     {
     }
-
     /**
      * Scores 6 when argument has preset number of elements.
      *
@@ -35,19 +31,17 @@ class ArrayCountToken implements TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument): int|false
+    public function score_argument($argument): int|false
     {
-        return $this->isCountable($argument) && $this->hasProperCount($argument) ? 6 : false;
+        return $this->is_countable($argument) && $this->has_proper_count($argument) ? 6 : false;
     }
-
     /**
      * Returns false.
      */
-    public function isLast(): bool
+    public function is_last(): bool
     {
         return false;
     }
-
     /**
      * Returns string representation for token.
      */
@@ -55,7 +49,6 @@ class ArrayCountToken implements TokenInterface
     {
         return sprintf('count(%s)', $this->count);
     }
-
     /**
      * Returns true if object is either array or instance of \Countable
      *
@@ -63,17 +56,16 @@ class ArrayCountToken implements TokenInterface
      *
      * @phpstan-assert-if-true array<mixed>|\Countable $argument
      */
-    private function isCountable($argument): bool
+    private function is_countable($argument): bool
     {
-        return (is_countable($argument));
+        return is_countable($argument);
     }
-
     /**
      * Returns true if $argument has expected number of elements
      *
      * @param array<mixed>|\Countable $argument
      */
-    private function hasProperCount(\Countable|array $argument): bool
+    private function has_proper_count(\Countable|array $argument): bool
     {
         return $this->count === count($argument);
     }

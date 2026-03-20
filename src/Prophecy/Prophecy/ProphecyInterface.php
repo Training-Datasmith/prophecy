@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Prophecy;
 
 /**
@@ -20,7 +18,7 @@ namespace Prophecy\Prophecy;
  *
  * @template-covariant T of object
  */
-interface ProphecyInterface
+interface Prophecy_Interface
 {
     /**
      * Reveals prophecy object (double) .

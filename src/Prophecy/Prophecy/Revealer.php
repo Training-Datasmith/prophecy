@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Prophecy;
 
 /**
@@ -18,7 +16,7 @@ namespace Prophecy\Prophecy;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class Revealer implements RevealerInterface
+class Revealer implements Revealer_Interface
 {
     /**
      * Unwraps value(s).
@@ -32,15 +30,12 @@ class Revealer implements RevealerInterface
         if (is_array($value)) {
             return array_map([$this, __FUNCTION__], $value);
         }
-
         if (!is_object($value)) {
             return $value;
         }
-
-        if ($value instanceof ProphecyInterface) {
+        if ($value instanceof Prophecy_Interface) {
             return $value->reveal();
         }
-
         return $value;
     }
 }

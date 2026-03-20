@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Argument\Token;
 
 /**
@@ -18,7 +16,7 @@ namespace Prophecy\Argument\Token;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-interface TokenInterface
+interface Token_Interface
 {
     /**
      * Calculates token match score for provided argument.
@@ -27,15 +25,13 @@ interface TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument);
-
+    public function score_argument($argument);
     /**
      * Returns true if this token prevents check of other tokens (is last one).
      *
      * @return bool
      */
-    public function isLast();
-
+    public function is_last();
     /**
      * Returns string representation for token.
      *

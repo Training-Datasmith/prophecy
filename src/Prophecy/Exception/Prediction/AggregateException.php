@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,12 +9,10 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Exception\Prediction;
 
-use Prophecy\Prophecy\ObjectProphecy;
-
-class AggregateException extends \RuntimeException implements PredictionException
+use Prophecy\Prophecy\Object_Prophecy;
+class Aggregate_Exception extends \RuntimeException implements Prediction_Exception
 {
     /**
      * @var list<PredictionException>
@@ -24,39 +21,34 @@ class AggregateException extends \RuntimeException implements PredictionExceptio
     /**
      * @var ObjectProphecy<object>|null
      */
-    private ?\Prophecy\Prophecy\ObjectProphecy $objectProphecy = null;
-
-    public function append(PredictionException $exception): void
+    private ?\Prophecy\Prophecy\Object_Prophecy $object_prophecy = null;
+    public function append(Prediction_Exception $exception): void
     {
-        $message = $exception->getMessage();
-        $message = strtr($message, ["\n" => "\n  "])."\n";
-        $message = empty($this->exceptions) ? $message : "\n".$message;
-
-        $this->message      = rtrim($this->message.$message);
+        $message = $exception->get_message();
+        $message = strtr($message, ["\n" => "\n  "]) . "\n";
+        $message = empty($this->exceptions) ? $message : "\n" . $message;
+        $this->message = rtrim($this->message . $message);
         $this->exceptions[] = $exception;
     }
-
     /**
      * @return list<PredictionException>
      */
-    public function getExceptions()
+    public function get_exceptions()
     {
         return $this->exceptions;
     }
-
     /**
      * @param ObjectProphecy<object> $objectProphecy
      */
-    public function setObjectProphecy(ObjectProphecy $objectProphecy): void
+    public function set_object_prophecy(Object_Prophecy $object_prophecy): void
     {
-        $this->objectProphecy = $objectProphecy;
+        $this->object_prophecy = $object_prophecy;
     }
-
     /**
      * @return ObjectProphecy<object>|null
      */
-    public function getObjectProphecy()
+    public function get_object_prophecy()
     {
-        return $this->objectProphecy;
+        return $this->object_prophecy;
     }
 }

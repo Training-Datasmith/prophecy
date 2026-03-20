@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,37 +9,32 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Argument\Token;
 
-use Prophecy\Comparator\FactoryProvider;
-use Prophecy\Util\StringUtil;
-use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\Comparator\Factory as ComparatorFactory;
-
+use Prophecy\Comparator\Factory_Provider;
+use Prophecy\Util\String_Util;
+use Sebastian_Bergmann\Comparator\Comparison_Failure;
+use Sebastian_Bergmann\Comparator\Factory as ComparatorFactory;
 /**
  * Exact value token.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class ExactValueToken implements TokenInterface
+class Exact_Value_Token implements Token_Interface
 {
     private ?string $string = null;
-    private readonly \Prophecy\Util\StringUtil $util;
-    private readonly \SebastianBergmann\Comparator\Factory $comparatorFactory;
-
+    private readonly \Prophecy\Util\String_Util $util;
+    private readonly \Sebastian_Bergmann\Comparator\Factory $comparator_factory;
     /**
      * Initializes token.
      *
      * @param mixed $value
      */
-    public function __construct(private $value, ?StringUtil $util = null, ?ComparatorFactory $comparatorFactory = null)
+    public function __construct(private $value, ?String_Util $util = null, ?Comparator_Factory $comparator_factory = null)
     {
-        $this->util  = $util ?: new StringUtil();
-
-        $this->comparatorFactory = $comparatorFactory ?: FactoryProvider::getInstance();
+        $this->util = $util ?: new String_Util();
+        $this->comparator_factory = $comparator_factory ?: Factory_Provider::get_instance();
     }
-
     /**
      * Scores 10 if argument matches preset value.
      *
@@ -48,32 +42,25 @@ class ExactValueToken implements TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument): int|false
+    public function score_argument($argument): int|false
     {
         if (is_object($argument) && is_object($this->value)) {
-            $comparator = $this->comparatorFactory->getComparatorFor(
-                $argument,
-                $this->value
-            );
-
+            $comparator = $this->comparator_factory->get_comparator_for($argument, $this->value);
             try {
-                $comparator->assertEquals($argument, $this->value);
+                $comparator->assert_equals($argument, $this->value);
                 return 10;
-            } catch (ComparisonFailure) {
+            } catch (Comparison_Failure) {
                 return false;
             }
         }
-
         // If either one is an object it should be castable to a string
         if (is_object($argument) xor is_object($this->value)) {
             if (is_object($argument) && !method_exists($argument, '__toString')) {
                 return false;
             }
-
             if (is_object($this->value) && !method_exists($this->value, '__toString')) {
                 return false;
             }
-
             if (is_numeric($argument) xor is_numeric($this->value)) {
                 return strval($argument) == strval($this->value) ? 10 : false;
             }
@@ -82,28 +69,24 @@ class ExactValueToken implements TokenInterface
         } elseif (gettype($argument) !== gettype($this->value)) {
             return false;
         }
-
         return $argument == $this->value ? 10 : false;
     }
-
     /**
      * Returns preset value against which token checks arguments.
      *
      * @return mixed
      */
-    public function getValue()
+    public function get_value()
     {
         return $this->value;
     }
-
     /**
      * Returns false.
      */
-    public function isLast(): bool
+    public function is_last(): bool
     {
         return false;
     }
-
     /**
      * Returns string representation for token.
      */
@@ -112,7 +95,6 @@ class ExactValueToken implements TokenInterface
         if (null === $this->string) {
             $this->string = sprintf('exact(%s)', $this->util->stringify($this->value));
         }
-
         return $this->string;
     }
 }

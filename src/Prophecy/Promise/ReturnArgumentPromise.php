@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,22 +9,19 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Promise;
 
 use Prophecy\Exception\InvalidArgumentException;
-use Prophecy\Prophecy\MethodProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
-
+use Prophecy\Prophecy\Method_Prophecy;
+use Prophecy\Prophecy\Object_Prophecy;
 /**
  * Returns nth argument if has one, null otherwise.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class ReturnArgumentPromise implements PromiseInterface
+class Return_Argument_Promise implements Promise_Interface
 {
     private readonly int $index;
-
     /**
      * Initializes callback promise.
      *
@@ -36,15 +32,11 @@ class ReturnArgumentPromise implements PromiseInterface
     public function __construct($index = 0)
     {
         if (!is_int($index) || $index < 0) {
-            throw new InvalidArgumentException(sprintf(
-                'Zero-based index expected as argument to ReturnArgumentPromise, but got %s.',
-                $index
-            ));
+            throw new InvalidArgumentException(sprintf('Zero-based index expected as argument to ReturnArgumentPromise, but got %s.', $index));
         }
         $this->index = $index;
     }
-
-    public function execute(array $args, ObjectProphecy $object, MethodProphecy $method)
+    public function execute(array $args, Object_Prophecy $object, Method_Prophecy $method)
     {
         return count($args) > $this->index ? $args[$this->index] : null;
     }

@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,12 +9,10 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Exception\Doubler;
 
 use ReflectionClass;
-
-class ClassMirrorException extends \RuntimeException implements DoublerException
+class Class_Mirror_Exception extends \RuntimeException implements Doubler_Exception
 {
     /**
      * @param string                  $message
@@ -25,11 +22,10 @@ class ClassMirrorException extends \RuntimeException implements DoublerException
     {
         parent::__construct($message);
     }
-
     /**
      * @return ReflectionClass<object>
      */
-    public function getReflectedClass()
+    public function get_reflected_class()
     {
         return $this->class;
     }

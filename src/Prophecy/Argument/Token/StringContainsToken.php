@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Argument\Token;
 
 /**
@@ -18,7 +16,7 @@ namespace Prophecy\Argument\Token;
  *
  * @author Peter Mitchell <pete@peterjmit.com>
  */
-class StringContainsToken implements TokenInterface
+class String_Contains_Token implements Token_Interface
 {
     /**
      * Initializes token.
@@ -28,30 +26,26 @@ class StringContainsToken implements TokenInterface
     public function __construct(private $value)
     {
     }
-
-    public function scoreArgument($argument): int|false
+    public function score_argument($argument): int|false
     {
         return is_string($argument) && str_contains($argument, $this->value) ? 6 : false;
     }
-
     /**
      * Returns preset value against which token checks arguments.
      *
      * @return mixed
      */
-    public function getValue()
+    public function get_value()
     {
         return $this->value;
     }
-
     /**
      * Returns false.
      */
-    public function isLast(): bool
+    public function is_last(): bool
     {
         return false;
     }
-
     /**
      * Returns string representation for token.
      */

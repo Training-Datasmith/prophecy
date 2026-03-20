@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,18 +9,16 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Comparator;
 
-use SebastianBergmann\Comparator\Comparator;
-use SebastianBergmann\Comparator\ComparisonFailure;
-
+use Sebastian_Bergmann\Comparator\Comparator;
+use Sebastian_Bergmann\Comparator\Comparison_Failure;
 /**
  * Closure comparator.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-final class ClosureComparator extends Comparator
+final class Closure_Comparator extends Comparator
 {
     /**
      * @param mixed $expected
@@ -29,10 +26,8 @@ final class ClosureComparator extends Comparator
      */
     public function accepts($expected, $actual): bool
     {
-        return is_object($expected) && $expected instanceof \Closure
-            && is_object($actual) && $actual instanceof \Closure;
+        return is_object($expected) && $expected instanceof \Closure && is_object($actual) && $actual instanceof \Closure;
     }
-
     /**
      * @param mixed $expected
      * @param mixed $actual
@@ -40,16 +35,15 @@ final class ClosureComparator extends Comparator
      * @param bool  $canonicalize
      * @param bool  $ignoreCase
      */
-    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false): void
+    public function assert_equals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignore_case = false): void
     {
         if ($expected !== $actual) {
             // Support for sebastian/comparator < 5
-            if ((new \ReflectionMethod(ComparisonFailure::class, '__construct'))->getNumberOfParameters() >= 6) {
+            if ((new \ReflectionMethod(Comparison_Failure::class, '__construct'))->get_number_of_parameters() >= 6) {
                 // @phpstan-ignore-next-line
-                throw new ComparisonFailure($expected, $actual, '', '', false, 'all closures are different if not identical');
+                throw new Comparison_Failure($expected, $actual, '', '', false, 'all closures are different if not identical');
             }
-
-            throw new ComparisonFailure(
+            throw new Comparison_Failure(
                 $expected,
                 $actual,
                 // we don't need a diff

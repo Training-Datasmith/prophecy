@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,45 +9,35 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Prophecy\Php_Documentor;
 
-namespace Prophecy\PhpDocumentor;
-
-use phpDocumentor\Reflection\DocBlock\Tags\Method;
-use phpDocumentor\Reflection\DocBlockFactory;
-use phpDocumentor\Reflection\Types\ContextFactory;
-
+use Php_Documentor\Reflection\Doc_Block\Tags\Method;
+use Php_Documentor\Reflection\Doc_Block_Factory;
+use Php_Documentor\Reflection\Types\Context_Factory;
 /**
  * @author Théo FIDRY <theo.fidry@gmail.com>
  *
  * @internal
  */
-final class ClassTagRetriever implements MethodTagRetrieverInterface
+final class Class_Tag_Retriever implements Method_Tag_Retriever_Interface
 {
-    private $docBlockFactory;
-    private $contextFactory;
-
+    private $doc_block_factory;
+    private $context_factory;
     public function __construct()
     {
-        $this->docBlockFactory = DocBlockFactory::createInstance();
-        $this->contextFactory = new ContextFactory();
+        $this->doc_block_factory = Doc_Block_Factory::create_instance();
+        $this->context_factory = new Context_Factory();
     }
-
-    public function getTagList(\ReflectionClass $reflectionClass): array
+    public function get_tag_list(\ReflectionClass $reflection_class): array
     {
         try {
-            $phpdoc = $this->docBlockFactory->create(
-                $reflectionClass,
-                $this->contextFactory->createFromReflector($reflectionClass)
-            );
-
+            $phpdoc = $this->doc_block_factory->create($reflection_class, $this->context_factory->create_from_reflector($reflection_class));
             $methods = [];
-
-            foreach ($phpdoc->getTagsByName('method') as $tag) {
+            foreach ($phpdoc->get_tags_by_name('method') as $tag) {
                 if ($tag instanceof Method) {
                     $methods[] = $tag;
                 }
             }
-
             return $methods;
         } catch (\InvalidArgumentException) {
             return [];

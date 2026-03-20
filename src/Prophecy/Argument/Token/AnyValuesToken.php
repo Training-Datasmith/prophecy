@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Argument\Token;
 
 /**
@@ -18,26 +16,24 @@ namespace Prophecy\Argument\Token;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class AnyValuesToken implements TokenInterface
+class Any_Values_Token implements Token_Interface
 {
     /**
      * Always scores 2 for any argument.
      *
      * @param $argument
      */
-    public function scoreArgument($argument): int
+    public function score_argument($argument): int
     {
         return 2;
     }
-
     /**
      * Returns true to stop wildcard from processing other tokens.
      */
-    public function isLast(): bool
+    public function is_last(): bool
     {
         return true;
     }
-
     /**
      * Returns string representation for token.
      */

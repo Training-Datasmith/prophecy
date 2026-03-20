@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,32 +9,27 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Doubler\Generator\Node;
 
 use Prophecy\Exception\InvalidArgumentException;
-
 /**
  * Method node.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class MethodNode
+class Method_Node
 {
     /**
      * @phpstan-var 'public'|'private'|'protected'
      */
     private string $visibility = 'public';
     private bool $static = false;
-    private bool $returnsReference = false;
-
-    private \Prophecy\Doubler\Generator\Node\ReturnTypeNode $returnTypeNode;
-
+    private bool $returns_reference = false;
+    private \Prophecy\Doubler\Generator\Node\Return_Type_Node $return_type_node;
     /**
      * @var list<ArgumentNode>
      */
     private array $arguments = [];
-
     // Used to accept an optional third argument with the deprecated Prophecy\Doubler\Generator\TypeHintReference so careful when adding a new argument in a minor version.
     /**
      * @param string      $name
@@ -43,184 +37,148 @@ class MethodNode
      */
     public function __construct(private $name, private $code = null)
     {
-        $this->returnTypeNode = new ReturnTypeNode();
+        $this->return_type_node = new Return_Type_Node();
     }
-
     /**
      * @return string
      *
      * @phpstan-return 'public'|'private'|'protected'
      */
-    public function getVisibility()
+    public function get_visibility()
     {
         return $this->visibility;
     }
-
     /**
      * @param string $visibility
      */
-    public function setVisibility($visibility): void
+    public function set_visibility($visibility): void
     {
         $visibility = strtolower($visibility);
-
         if (!\in_array($visibility, ['public', 'private', 'protected'], true)) {
-            throw new InvalidArgumentException(sprintf(
-                '`%s` method visibility is not supported.',
-                $visibility
-            ));
+            throw new InvalidArgumentException(sprintf('`%s` method visibility is not supported.', $visibility));
         }
-
         $this->visibility = $visibility;
     }
-
     /**
      * @return bool
      */
-    public function isStatic()
+    public function is_static()
     {
         return $this->static;
     }
-
     /**
      * @param bool $static
      */
-    public function setStatic($static = true): void
+    public function set_static($static = true): void
     {
         $this->static = (bool) $static;
     }
-
     /**
      * @return bool
      */
-    public function returnsReference()
+    public function returns_reference()
     {
-        return $this->returnsReference;
+        return $this->returns_reference;
     }
-
-    public function setReturnsReference(): void
+    public function set_returns_reference(): void
     {
-        $this->returnsReference = true;
+        $this->returns_reference = true;
     }
-
     /**
      * @return string
      */
-    public function getName()
+    public function get_name()
     {
         return $this->name;
     }
-
-    public function addArgument(ArgumentNode $argument): void
+    public function add_argument(Argument_Node $argument): void
     {
         $this->arguments[] = $argument;
     }
-
     /**
      * @return list<ArgumentNode>
      */
-    public function getArguments()
+    public function get_arguments()
     {
         return $this->arguments;
     }
-
     /**
      * @deprecated use getReturnTypeNode instead
      */
-    public function hasReturnType(): bool
+    public function has_return_type(): bool
     {
-        return (bool) $this->returnTypeNode->getNonNullTypes();
+        return (bool) $this->return_type_node->get_non_null_types();
     }
-
-    public function setReturnTypeNode(ReturnTypeNode $returnTypeNode): void
+    public function set_return_type_node(Return_Type_Node $return_type_node): void
     {
-        $this->returnTypeNode = $returnTypeNode;
+        $this->return_type_node = $return_type_node;
     }
-
     /**
      * @deprecated use setReturnTypeNode instead
      * @param string $type
      */
-    public function setReturnType($type = null): void
+    public function set_return_type($type = null): void
     {
-        $this->returnTypeNode = ($type === '' || $type === null) ? new ReturnTypeNode() : new ReturnTypeNode($type);
+        $this->return_type_node = $type === '' || $type === null ? new Return_Type_Node() : new Return_Type_Node($type);
     }
-
     /**
      * @deprecated use setReturnTypeNode instead
      * @param bool $bool
      */
-    public function setNullableReturnType($bool = true): void
+    public function set_nullable_return_type($bool = true): void
     {
         if ($bool) {
-            $this->returnTypeNode = new ReturnTypeNode('null', ...$this->returnTypeNode->getTypes());
+            $this->return_type_node = new Return_Type_Node('null', ...$this->return_type_node->get_types());
         } else {
-            $this->returnTypeNode = new ReturnTypeNode(...$this->returnTypeNode->getNonNullTypes());
+            $this->return_type_node = new Return_Type_Node(...$this->return_type_node->get_non_null_types());
         }
     }
-
     /**
      * @deprecated use getReturnTypeNode instead
      * @return string|null
      */
-    public function getReturnType()
+    public function get_return_type()
     {
-        if ($types = $this->returnTypeNode->getNonNullTypes()) {
+        if ($types = $this->return_type_node->get_non_null_types()) {
             return $types[0];
         }
-
         return null;
     }
-
-    public function getReturnTypeNode(): ReturnTypeNode
+    public function get_return_type_node(): Return_Type_Node
     {
-        return $this->returnTypeNode;
+        return $this->return_type_node;
     }
-
     /**
      * @deprecated use getReturnTypeNode instead
      */
-    public function hasNullableReturnType(): bool
+    public function has_nullable_return_type(): bool
     {
-        return $this->returnTypeNode->isNullable();
+        return $this->return_type_node->is_nullable();
     }
-
     /**
      * @param string $code
      */
-    public function setCode($code): void
+    public function set_code($code): void
     {
         $this->code = $code;
     }
-
-    public function getCode(): string
+    public function get_code(): string
     {
-        if ($this->returnsReference) {
-            return "throw new \Prophecy\Exception\Doubler\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), '{$this->name}');";
+        if ($this->returns_reference) {
+            return "throw new \\Prophecy\\Exception\\Doubler\\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), '{$this->name}');";
         }
-
         return (string) $this->code;
     }
-
-    public function useParentCode(): void
+    public function use_parent_code(): void
     {
-        $this->code = sprintf(
-            'return parent::%s(%s);',
-            $this->getName(),
-            implode(
-                ', ',
-                array_map($this->generateArgument(...), $this->arguments)
-            )
-        );
+        $this->code = sprintf('return parent::%s(%s);', $this->get_name(), implode(', ', array_map($this->generate_argument(...), $this->arguments)));
     }
-
-    private function generateArgument(ArgumentNode $arg): string
+    private function generate_argument(Argument_Node $arg): string
     {
-        $argument = '$'.$arg->getName();
-
-        if ($arg->isVariadic()) {
-            return '...'.$argument;
+        $argument = '$' . $arg->get_name();
+        if ($arg->is_variadic()) {
+            return '...' . $argument;
         }
-
         return $argument;
     }
 }

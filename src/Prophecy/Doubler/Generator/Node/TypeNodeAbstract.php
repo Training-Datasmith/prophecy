@@ -1,60 +1,49 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Prophecy\Doubler\Generator\Node;
 
-use Prophecy\Doubler\Generator\Node\Type\BuiltinType;
-use Prophecy\Doubler\Generator\Node\Type\IntersectionType;
-use Prophecy\Doubler\Generator\Node\Type\ObjectType;
-use Prophecy\Doubler\Generator\Node\Type\SimpleType;
-use Prophecy\Doubler\Generator\Node\Type\TypeInterface;
-use Prophecy\Doubler\Generator\Node\Type\UnionType;
-use Prophecy\Exception\Doubler\DoubleException;
-
-abstract class TypeNodeAbstract
+use Prophecy\Doubler\Generator\Node\Type\Builtin_Type;
+use Prophecy\Doubler\Generator\Node\Type\Intersection_Type;
+use Prophecy\Doubler\Generator\Node\Type\Object_Type;
+use Prophecy\Doubler\Generator\Node\Type\Simple_Type;
+use Prophecy\Doubler\Generator\Node\Type\Type_Interface;
+use Prophecy\Doubler\Generator\Node\Type\Union_Type;
+use Prophecy\Exception\Doubler\Double_Exception;
+abstract class Type_Node_Abstract
 {
     // null means no type, NOT BuiltInType("null")
-    private ?TypeInterface $type;
-
-    public function __construct(string|TypeInterface|null $type = null, string ...$types)
+    private ?Type_Interface $type;
+    public function __construct(string|Type_Interface|null $type = null, string ...$types)
     {
         if (!empty($types) || is_string($type)) {
             $types = [$type, ...$types];
         }
-
         if (!empty($types)) {
             // BC Layer for usage with strings
-            trigger_deprecation(
-                'phpspec/prophecy',
-                '1.23',
-                'Instanciating node type with a string type will not be supported in the future, use a TypeInterface instance instead.',
-            );
-
+            trigger_deprecation('phpspec/prophecy', '1.23', 'Instanciating node type with a string type will not be supported in the future, use a TypeInterface instance instead.');
             // BC Layer for usage with strings
-            $typesNormalized = [];
+            $types_normalized = [];
             /** @var list<BuiltinType|ObjectType|IntersectionType> $union */
             $union = [];
             foreach ($types as $type) {
                 if (!is_string($type)) {
-                    throw new DoubleException('Building a TypeNode with string is deprecated. Mixing strings and type object is not allowed.');
+                    throw new Double_Exception('Building a TypeNode with string is deprecated. Mixing strings and type object is not allowed.');
                 }
-
-                if ($this->isBuiltIn($type)) {
-                    $type = new BuiltinType($this->normalizeBuiltinType($type));
+                if ($this->is_built_in($type)) {
+                    $type = new Builtin_Type($this->normalize_builtin_type($type));
                 } else {
                     /** @var class-string $typeName */
-                    $typeName = $this->removePrefixNsSeparator($type);
-                    $type = new ObjectType($typeName);
+                    $type_name = $this->remove_prefix_ns_separator($type);
+                    $type = new Object_Type($type_name);
                 }
-                if (!in_array($type->getType(), $typesNormalized, true)) {
+                if (!in_array($type->get_type(), $types_normalized, true)) {
                     $union[] = $type;
-                    $typesNormalized[] = $type->getType();
+                    $types_normalized[] = $type->get_type();
                 }
             }
-
             if (count($union) > 1) {
-                $this->type = new UnionType($union);
+                $this->type = new Union_Type($union);
             } else {
                 $this->type = $union[0];
             }
@@ -63,113 +52,85 @@ abstract class TypeNodeAbstract
             $this->type = $type;
         }
     }
-
     /**
      * @deprecated use isNullable() instead
      */
-    public function canUseNullShorthand(): bool
+    public function can_use_null_shorthand(): bool
     {
-        trigger_deprecation(
-            'phpspec/prophecy',
-            '1.23',
-            'This method is deprecated in favor of nullable()'
-        );
-        if ($this->type instanceof UnionType) {
-            return $this->type->has(new BuiltinType('null')) && count($this->type->getTypes()) === 2;
+        trigger_deprecation('phpspec/prophecy', '1.23', 'This method is deprecated in favor of nullable()');
+        if ($this->type instanceof Union_Type) {
+            return $this->type->has(new Builtin_Type('null')) && count($this->type->get_types()) === 2;
         }
-
         return false;
     }
-
-    public function isNullable(): bool
+    public function is_nullable(): bool
     {
-        if ($this->type instanceof UnionType) {
-            return $this->type->has(new BuiltinType('null'));
+        if ($this->type instanceof Union_Type) {
+            return $this->type->has(new Builtin_Type('null'));
         }
-
-        if ($this->type instanceof SimpleType && $this->type->getType() === 'null') {
+        if ($this->type instanceof Simple_Type && $this->type->get_type() === 'null') {
             return true;
         }
-
         return false;
     }
-
     /**
      * @return list<string>
      * @deprecated use getType() instead
      */
-    public function getTypes(): array
+    public function get_types(): array
     {
-        trigger_deprecation(
-            'phpspec/prophecy',
-            '1.23',
-            'This method is deprecated in favor of getType()',
-        );
-        if ($this->type instanceof SimpleType) {
+        trigger_deprecation('phpspec/prophecy', '1.23', 'This method is deprecated in favor of getType()');
+        if ($this->type instanceof Simple_Type) {
             return [(string) $this->type];
         }
-
         $types = [];
-
-        if ($this->type instanceof UnionType) {
-            foreach ($this->type->getTypes() as $type) {
-                if ($type instanceof IntersectionType) {
-                    throw new DoubleException('getType() method is deprecated and do not support IntersectionType by design. Use getType() instead.');
+        if ($this->type instanceof Union_Type) {
+            foreach ($this->type->get_types() as $type) {
+                if ($type instanceof Intersection_Type) {
+                    throw new Double_Exception('getType() method is deprecated and do not support IntersectionType by design. Use getType() instead.');
                 }
-                $types[$type->getType()] = (string) $type;
+                $types[$type->get_type()] = (string) $type;
             }
         }
-
-        $types =  array_values($types);
-        $types = array_map($this->normalizeBuiltinType(...), $types);
-
+        $types = array_values($types);
+        $types = array_map($this->normalize_builtin_type(...), $types);
         return array_values(array_unique($types));
     }
-
-    public function getType(): ?TypeInterface
+    public function get_type(): ?Type_Interface
     {
         return $this->type;
     }
-
     /**
      * @deprecated use getType() instead
      * @return list<string>
      */
-    public function getNonNullTypes(): array
+    public function get_non_null_types(): array
     {
-        trigger_deprecation(
-            'phpspec/prophecy',
-            '1.23',
-            'This method is deprecated in favor of getType() and the usage of the new type API.',
-        );
+        trigger_deprecation('phpspec/prophecy', '1.23', 'This method is deprecated in favor of getType() and the usage of the new type API.');
         if ($this->type === null) {
             return [];
         }
-        if ($this->type instanceof UnionType) {
+        if ($this->type instanceof Union_Type) {
             $types = [];
-            foreach ($this->type->getTypes() as $type) {
-                if ($type instanceof IntersectionType) {
-                    throw new DoubleException('You are using the old (and deprecated) API which is not compatible with intersections');
+            foreach ($this->type->get_types() as $type) {
+                if ($type instanceof Intersection_Type) {
+                    throw new Double_Exception('You are using the old (and deprecated) API which is not compatible with intersections');
                 }
-                if (!$type instanceof BuiltinType || $type->getType() !== 'null') {
-                    $types[] = $type->getType();
+                if (!$type instanceof Builtin_Type || $type->get_type() !== 'null') {
+                    $types[] = $type->get_type();
                 }
             }
-
             return $types;
         }
-
-        if ($this->type instanceof SimpleType) {
-            if ($this->type->getType() === 'null') {
+        if ($this->type instanceof Simple_Type) {
+            if ($this->type->get_type() === 'null') {
                 return [];
             }
-            return [$this->type->getType()];
+            return [$this->type->get_type()];
         }
-
-        throw new DoubleException('getNonNullTypes() method is deprecated and do not support IntersectionType by design. Use getType() instead.');
+        throw new Double_Exception('getNonNullTypes() method is deprecated and do not support IntersectionType by design. Use getType() instead.');
     }
-
-    private function normalizeBuiltinType(string $type): string
+    private function normalize_builtin_type(string $type): string
     {
         return match ($type) {
             'double', 'real' => 'float',
@@ -178,8 +139,7 @@ abstract class TypeNodeAbstract
             default => $type,
         };
     }
-
-    protected function isBuiltIn(string $type): bool
+    protected function is_built_in(string $type): bool
     {
         return match ($type) {
             'double', 'real', 'boolean', 'integer', 'self', 'static', 'array', 'callable', 'bool', 'false', 'true', 'float', 'int', 'string', 'iterable', 'object', 'null', 'mixed', 'void', 'never' => true,
@@ -187,8 +147,7 @@ abstract class TypeNodeAbstract
             default => false,
         };
     }
-
-    protected function removePrefixNsSeparator(string $type): string
+    protected function remove_prefix_ns_separator(string $type): string
     {
         return ltrim($type, '\\');
     }

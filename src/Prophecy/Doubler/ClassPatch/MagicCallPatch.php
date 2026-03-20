@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,15 +9,13 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Prophecy\Doubler\Class_Patch;
 
-namespace Prophecy\Doubler\ClassPatch;
-
-use Prophecy\Doubler\Generator\Node\ArgumentNode;
-use Prophecy\Doubler\Generator\Node\ClassNode;
-use Prophecy\Doubler\Generator\Node\MethodNode;
-use Prophecy\PhpDocumentor\ClassAndInterfaceTagRetriever;
-use Prophecy\PhpDocumentor\MethodTagRetrieverInterface;
-
+use Prophecy\Doubler\Generator\Node\Argument_Node;
+use Prophecy\Doubler\Generator\Node\Class_Node;
+use Prophecy\Doubler\Generator\Node\Method_Node;
+use Prophecy\Php_Documentor\Class_And_Interface_Tag_Retriever;
+use Prophecy\Php_Documentor\Method_Tag_Retriever_Interface;
 /**
  * Discover Magical API using "@method" PHPDoc format.
  *
@@ -26,81 +23,69 @@ use Prophecy\PhpDocumentor\MethodTagRetrieverInterface;
  * @author Kévin Dunglas <dunglas@gmail.com>
  * @author Théo FIDRY <theo.fidry@gmail.com>
  */
-class MagicCallPatch implements ClassPatchInterface
+class Magic_Call_Patch implements Class_Patch_Interface
 {
     public const MAGIC_METHODS_WITH_ARGUMENTS = ['__call', '__callStatic', '__get', '__isset', '__set', '__set_state', '__unserialize', '__unset'];
-
-    public function __construct(private readonly ?MethodTagRetrieverInterface $tagRetriever = new ClassAndInterfaceTagRetriever())
+    public function __construct(private readonly ?Method_Tag_Retriever_Interface $tag_retriever = new Class_And_Interface_Tag_Retriever())
     {
     }
-
     /**
      * Support any class
      *
      *
      */
-    public function supports(ClassNode $node): bool
+    public function supports(Class_Node $node): bool
     {
         return true;
     }
-
     /**
      * Discover Magical API
      */
-    public function apply(ClassNode $node): void
+    public function apply(Class_Node $node): void
     {
-        $types = array_filter($node->getInterfaces(), fn (string $interface) => !str_starts_with($interface, 'Prophecy\\'));
-        $types[] = $node->getParentClass();
-
+        $types = array_filter($node->get_interfaces(), fn(string $interface) => !str_starts_with($interface, 'Prophecy\\'));
+        $types[] = $node->get_parent_class();
         foreach ($types as $type) {
-            $reflectionClass = new \ReflectionClass($type);
-
-            while ($reflectionClass) {
-                $tagList = $this->tagRetriever->getTagList($reflectionClass);
-
-                foreach ($tagList as $tag) {
-                    $methodName = $tag->getMethodName();
-
-                    if (empty($methodName)) {
+            $reflection_class = new \ReflectionClass($type);
+            while ($reflection_class) {
+                $tag_list = $this->tag_retriever->get_tag_list($reflection_class);
+                foreach ($tag_list as $tag) {
+                    $method_name = $tag->get_method_name();
+                    if (empty($method_name)) {
                         continue;
                     }
-
-                    if (!$reflectionClass->hasMethod($methodName)) {
-                        $methodNode = new MethodNode($methodName);
-
+                    if (!$reflection_class->has_method($method_name)) {
+                        $method_node = new Method_Node($method_name);
                         // only magic methods can have a contract that needs to be enforced
-                        if (in_array($methodName, self::MAGIC_METHODS_WITH_ARGUMENTS)) {
+                        if (in_array($method_name, self::MAGIC_METHODS_WITH_ARGUMENTS)) {
                             if (method_exists($tag, 'getParameters')) {
                                 // Reflection Docblock 5.4.0+.
-                                foreach ($tag->getParameters() as $argument) {
-                                    $argumentNode = new ArgumentNode($argument->getName());
-                                    $methodNode->addArgument($argumentNode);
+                                foreach ($tag->get_parameters() as $argument) {
+                                    $argument_node = new Argument_Node($argument->get_name());
+                                    $method_node->add_argument($argument_node);
                                 }
                             } else {
                                 // Reflection Docblock < 5.4.0.
-                                foreach ($tag->getArguments() as $argument) {
-                                    $argumentNode = new ArgumentNode($argument['name']);
-                                    $methodNode->addArgument($argumentNode);
+                                foreach ($tag->get_arguments() as $argument) {
+                                    $argument_node = new Argument_Node($argument['name']);
+                                    $method_node->add_argument($argument_node);
                                 }
                             }
                         }
-
-                        $methodNode->setStatic($tag->isStatic());
-                        $node->addMethod($methodNode);
+                        $method_node->set_static($tag->is_static());
+                        $node->add_method($method_node);
                     }
                 }
-
-                $reflectionClass = $reflectionClass->getParentClass();
+                $reflection_class = $reflection_class->get_parent_class();
             }
         }
     }
-
     /**
      * Returns patch priority, which determines when patch will be applied.
      *
      * @return integer Priority number (higher - earlier)
      */
-    public function getPriority(): int
+    public function get_priority(): int
     {
         return 50;
     }

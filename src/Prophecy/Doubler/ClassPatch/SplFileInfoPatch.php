@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,99 +9,80 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Prophecy\Doubler\Class_Patch;
 
-namespace Prophecy\Doubler\ClassPatch;
-
-use Prophecy\Doubler\Generator\Node\ClassNode;
-use Prophecy\Doubler\Generator\Node\MethodNode;
-
+use Prophecy\Doubler\Generator\Node\Class_Node;
+use Prophecy\Doubler\Generator\Node\Method_Node;
 /**
  * SplFileInfo patch.
  * Makes SplFileInfo and derivative classes usable with Prophecy.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class SplFileInfoPatch implements ClassPatchInterface
+class Spl_File_Info_Patch implements Class_Patch_Interface
 {
     /**
      * Supports everything that extends SplFileInfo.
      *
      *
      */
-    public function supports(ClassNode $node): bool
+    public function supports(Class_Node $node): bool
     {
-        if ('SplFileInfo' === $node->getParentClass()) {
+        if ('SplFileInfo' === $node->get_parent_class()) {
             return true;
         }
-        return is_subclass_of($node->getParentClass(), 'SplFileInfo');
+        return is_subclass_of($node->get_parent_class(), 'SplFileInfo');
     }
-
     /**
      * Updated constructor code to call parent one with dummy file argument.
      */
-    public function apply(ClassNode $node): void
+    public function apply(Class_Node $node): void
     {
-        if ($node->hasMethod('__construct')) {
-            $constructor = $node->getMethod('__construct');
+        if ($node->has_method('__construct')) {
+            $constructor = $node->get_method('__construct');
             \assert($constructor !== null);
         } else {
-            $constructor = new MethodNode('__construct');
-            $node->addMethod($constructor);
+            $constructor = new Method_Node('__construct');
+            $node->add_method($constructor);
         }
-
-        if ($this->nodeIsDirectoryIterator($node)) {
-            $constructor->setCode('return parent::__construct("'.__DIR__.'");');
-
+        if ($this->node_is_directory_iterator($node)) {
+            $constructor->set_code('return parent::__construct("' . __DIR__ . '");');
             return;
         }
-
-        if ($this->nodeIsSplFileObject($node)) {
-            $filePath = str_replace('\\', '\\\\', __FILE__);
-            $constructor->setCode('return parent::__construct("'.$filePath.'");');
-
+        if ($this->node_is_spl_file_object($node)) {
+            $file_path = str_replace('\\', '\\\\', __FILE__);
+            $constructor->set_code('return parent::__construct("' . $file_path . '");');
             return;
         }
-
-        if ($this->nodeIsSymfonySplFileInfo($node)) {
-            $filePath = str_replace('\\', '\\\\', __FILE__);
-            $constructor->setCode('return parent::__construct("'.$filePath.'", "", "");');
-
+        if ($this->node_is_symfony_spl_file_info($node)) {
+            $file_path = str_replace('\\', '\\\\', __FILE__);
+            $constructor->set_code('return parent::__construct("' . $file_path . '", "", "");');
             return;
         }
-
-        $constructor->useParentCode();
+        $constructor->use_parent_code();
     }
-
     /**
      * Returns patch priority, which determines when patch will be applied.
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority(): int
+    public function get_priority(): int
     {
         return 50;
     }
-
-    private function nodeIsDirectoryIterator(ClassNode $node): bool
+    private function node_is_directory_iterator(Class_Node $node): bool
     {
-        $parent = $node->getParentClass();
-
-        return 'DirectoryIterator' === $parent
-            || is_subclass_of($parent, 'DirectoryIterator');
+        $parent = $node->get_parent_class();
+        return 'DirectoryIterator' === $parent || is_subclass_of($parent, 'DirectoryIterator');
     }
-
-    private function nodeIsSplFileObject(ClassNode $node): bool
+    private function node_is_spl_file_object(Class_Node $node): bool
     {
-        $parent = $node->getParentClass();
-
-        return 'SplFileObject' === $parent
-            || is_subclass_of($parent, 'SplFileObject');
+        $parent = $node->get_parent_class();
+        return 'SplFileObject' === $parent || is_subclass_of($parent, 'SplFileObject');
     }
-
-    private function nodeIsSymfonySplFileInfo(ClassNode $node): bool
+    private function node_is_symfony_spl_file_info(Class_Node $node): bool
     {
-        $parent = $node->getParentClass();
-
-        return \Symfony\Component\Finder\SplFileInfo::class === $parent;
+        $parent = $node->get_parent_class();
+        return \Symfony\Component\Finder\Spl_File_Info::class === $parent;
     }
 }

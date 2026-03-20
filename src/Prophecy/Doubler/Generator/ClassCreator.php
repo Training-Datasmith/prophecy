@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,26 +9,22 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Doubler\Generator;
 
-use Prophecy\Exception\Doubler\ClassCreatorException;
-
+use Prophecy\Exception\Doubler\Class_Creator_Exception;
 /**
  * Class creator.
  * Creates specific class in current environment.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class ClassCreator
+class Class_Creator
 {
-    private readonly \Prophecy\Doubler\Generator\ClassCodeGenerator $generator;
-
-    public function __construct(?ClassCodeGenerator $generator = null)
+    private readonly \Prophecy\Doubler\Generator\Class_Code_Generator $generator;
+    public function __construct(?Class_Code_Generator $generator = null)
     {
-        $this->generator = $generator ?: new ClassCodeGenerator();
+        $this->generator = $generator ?: new Class_Code_Generator();
     }
-
     /**
      * Creates class.
      *
@@ -38,26 +33,16 @@ class ClassCreator
      * @return mixed
      * @throws \Prophecy\Exception\Doubler\ClassCreatorException
      */
-    public function create($classname, Node\ClassNode $class)
+    public function create($classname, Node\Class_Node $class)
     {
         $code = $this->generator->generate($classname, $class);
         $return = eval($code);
-
         if (!class_exists($classname, false)) {
-            if (count($class->getInterfaces())) {
-                throw new ClassCreatorException(sprintf(
-                    'Could not double `%s` and implement interfaces: [%s].',
-                    $class->getParentClass(),
-                    implode(', ', $class->getInterfaces())
-                ), $class);
+            if (count($class->get_interfaces())) {
+                throw new Class_Creator_Exception(sprintf('Could not double `%s` and implement interfaces: [%s].', $class->get_parent_class(), implode(', ', $class->get_interfaces())), $class);
             }
-
-            throw new ClassCreatorException(
-                sprintf('Could not double `%s`.', $class->getParentClass()),
-                $class
-            );
+            throw new Class_Creator_Exception(sprintf('Could not double `%s`.', $class->get_parent_class()), $class);
         }
-
         return $return;
     }
 }

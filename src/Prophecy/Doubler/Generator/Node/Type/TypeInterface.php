@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Prophecy\Doubler\Generator\Node\Type;
 
-interface TypeInterface extends \Stringable
+interface Type_Interface extends \Stringable
 {
-    public function equals(TypeInterface $givenType): bool;
+    public function equals(Type_Interface $given_type): bool;
 }

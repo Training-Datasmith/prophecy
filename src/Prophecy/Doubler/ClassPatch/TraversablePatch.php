@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,37 +9,34 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Prophecy\Doubler\Class_Patch;
 
-namespace Prophecy\Doubler\ClassPatch;
-
-use Prophecy\Doubler\Generator\Node\ClassNode;
-use Prophecy\Doubler\Generator\Node\MethodNode;
-use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
-use Prophecy\Doubler\Generator\Node\Type\BuiltinType;
-
+use Prophecy\Doubler\Generator\Node\Class_Node;
+use Prophecy\Doubler\Generator\Node\Method_Node;
+use Prophecy\Doubler\Generator\Node\Return_Type_Node;
+use Prophecy\Doubler\Generator\Node\Type\Builtin_Type;
 /**
  * Traversable interface patch.
  * Forces classes that implement interfaces, that extend Traversable to also implement Iterator.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class TraversablePatch implements ClassPatchInterface
+class Traversable_Patch implements Class_Patch_Interface
 {
     /**
      * Supports nodetree, that implement Traversable, but not Iterator or IteratorAggregate.
      *
      *
      */
-    public function supports(ClassNode $node): bool
+    public function supports(Class_Node $node): bool
     {
-        if (in_array('Iterator', $node->getInterfaces())) {
+        if (in_array('Iterator', $node->get_interfaces())) {
             return false;
         }
-        if (in_array('IteratorAggregate', $node->getInterfaces())) {
+        if (in_array('IteratorAggregate', $node->get_interfaces())) {
             return false;
         }
-
-        foreach ($node->getInterfaces() as $interface) {
+        foreach ($node->get_interfaces() as $interface) {
             if ('Traversable' !== $interface && !is_subclass_of($interface, 'Traversable')) {
                 continue;
             }
@@ -56,47 +52,38 @@ class TraversablePatch implements ClassPatchInterface
             if (is_subclass_of($interface, 'IteratorAggregate')) {
                 continue;
             }
-
             return true;
         }
-
         return false;
     }
-
     /**
      * Forces class to implement Iterator interface.
      */
-    public function apply(ClassNode $node): void
+    public function apply(Class_Node $node): void
     {
-        $node->addInterface('Iterator');
-
-        $currentMethod = new MethodNode('current');
-        $currentMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('mixed')));
-        $node->addMethod($currentMethod);
-
-        $keyMethod = new MethodNode('key');
-        $keyMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('mixed')));
-        $node->addMethod($keyMethod);
-
-        $nextMethod = new MethodNode('next');
-        $nextMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('void')));
-        $node->addMethod($nextMethod);
-
-        $rewindMethod = new MethodNode('rewind');
-        $rewindMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('void')));
-        $node->addMethod($rewindMethod);
-
-        $validMethod = new MethodNode('valid');
-        $validMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('bool')));
-        $node->addMethod($validMethod);
+        $node->add_interface('Iterator');
+        $current_method = new Method_Node('current');
+        $current_method->set_return_type_node(new Return_Type_Node(new Builtin_Type('mixed')));
+        $node->add_method($current_method);
+        $key_method = new Method_Node('key');
+        $key_method->set_return_type_node(new Return_Type_Node(new Builtin_Type('mixed')));
+        $node->add_method($key_method);
+        $next_method = new Method_Node('next');
+        $next_method->set_return_type_node(new Return_Type_Node(new Builtin_Type('void')));
+        $node->add_method($next_method);
+        $rewind_method = new Method_Node('rewind');
+        $rewind_method->set_return_type_node(new Return_Type_Node(new Builtin_Type('void')));
+        $node->add_method($rewind_method);
+        $valid_method = new Method_Node('valid');
+        $valid_method->set_return_type_node(new Return_Type_Node(new Builtin_Type('bool')));
+        $node->add_method($valid_method);
     }
-
     /**
      * Returns patch priority, which determines when patch will be applied.
      *
      * @return int Priority number (higher - earlier)
      */
-    public function getPriority(): int
+    public function get_priority(): int
     {
         return 100;
     }

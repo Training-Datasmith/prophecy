@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Prophecy\Doubler\Generator\Node\Type;
 
-final readonly class ObjectType implements SimpleType
+final readonly class Object_Type implements Simple_Type
 {
     /**
      * @param class-string $type
@@ -12,26 +11,22 @@ final readonly class ObjectType implements SimpleType
     public function __construct(private string $type)
     {
     }
-
     public function __toString(): string
     {
-        return '\\'.$this->type;
+        return '\\' . $this->type;
     }
-
     /**
      * @return class-string
      */
-    public function getType(): string
+    public function get_type(): string
     {
         return $this->type;
     }
-
-    public function equals(TypeInterface $givenType): bool
+    public function equals(Type_Interface $given_type): bool
     {
-        if (!$givenType instanceof ObjectType) {
+        if (!$given_type instanceof Object_Type) {
             return false;
         }
-
-        return $this->getType() === $givenType->getType();
+        return $this->get_type() === $given_type->get_type();
     }
 }

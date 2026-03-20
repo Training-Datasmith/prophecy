@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Prophecy\Doubler\Generator;
 
 /**
@@ -10,32 +9,30 @@ namespace Prophecy\Doubler\Generator;
  *
  * @deprecated in favour of Node\TypeNodeAbstract
  */
-final class TypeHintReference
+final class Type_Hint_Reference
 {
     /**
      * @param string $type
      *
      * @return bool
      */
-    public function isBuiltInParamTypeHint($type)
+    public function is_built_in_param_type_hint($type)
     {
         return match ($type) {
             'self', 'array', 'callable', 'bool', 'float', 'int', 'string', 'iterable', 'object', 'mixed' => true,
             default => false,
         };
     }
-
     /**
      * @param string $type
      *
      * @return bool
      */
-    public function isBuiltInReturnTypeHint($type)
+    public function is_built_in_return_type_hint($type)
     {
         if ($type === 'void') {
             return true;
         }
-
-        return $this->isBuiltInParamTypeHint($type);
+        return $this->is_built_in_param_type_hint($type);
     }
 }

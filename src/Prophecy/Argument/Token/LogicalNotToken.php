@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,7 +9,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Argument\Token;
 
 /**
@@ -18,18 +16,16 @@ namespace Prophecy\Argument\Token;
  *
  * @author Boris Mikhaylov <kaguxmail@gmail.com>
  */
-class LogicalNotToken implements TokenInterface
+class Logical_Not_Token implements Token_Interface
 {
-    private readonly \Prophecy\Argument\Token\TokenInterface $token;
-
+    private readonly \Prophecy\Argument\Token\Token_Interface $token;
     /**
      * @param mixed $value exact value or token
      */
     public function __construct($value)
     {
-        $this->token = $value instanceof TokenInterface ? $value : new ExactValueToken($value);
+        $this->token = $value instanceof Token_Interface ? $value : new Exact_Value_Token($value);
     }
-
     /**
      * Scores 4 when preset token does not match the argument.
      *
@@ -37,31 +33,28 @@ class LogicalNotToken implements TokenInterface
      *
      * @return false|int
      */
-    public function scoreArgument($argument): int|false
+    public function score_argument($argument): int|false
     {
-        return false === $this->token->scoreArgument($argument) ? 4 : false;
+        return false === $this->token->score_argument($argument) ? 4 : false;
     }
-
     /**
      * Returns true if preset token is last.
      *
      * @return bool
      */
-    public function isLast()
+    public function is_last()
     {
-        return $this->token->isLast();
+        return $this->token->is_last();
     }
-
     /**
      * Returns originating token.
      *
      * @return TokenInterface
      */
-    public function getOriginatingToken()
+    public function get_originating_token()
     {
         return $this->token;
     }
-
     /**
      * Returns string representation for token.
      */

@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /*
  * This file is part of the Prophecy.
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -10,11 +9,9 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Prophecy\Exception\Prediction;
 
-use Prophecy\Exception\Prophecy\MethodProphecyException;
-
-class NoCallsException extends MethodProphecyException implements PredictionException
+use Prophecy\Exception\Prophecy\Method_Prophecy_Exception;
+class No_Calls_Exception extends Method_Prophecy_Exception implements Prediction_Exception
 {
 }
